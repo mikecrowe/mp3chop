@@ -6,7 +6,16 @@
 
 int MP3Processor::ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc)
 {
+    fprintf(stderr, "SampleRate=%d, tc_hundredths=%d, samples_per_frame=%d\n",
+	    h->SampleRate(), tc.GetAsHundredths(), h->SamplesPerFrame());
+
     return ((h->SampleRate() * tc.GetAsHundredths()) / 100)/(h->SamplesPerFrame());
+}
+
+TimeCode MP3Processor::ConvertSampleCountToTime(long long sample_count, int sample_rate)
+{
+    const long long pos = (static_cast<long long>(sample_count) * 100LL)/static_cast<int64>(sample_rate);
+    return TimeCode(static_cast<int>(pos));
 }
 
 bool MP3Processor::IsID3Header(const BYTE *p)
@@ -19,8 +28,8 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, TimeCode start_tc, TimeCod
     //unsigned long header;
     MPEGHeader h;
     
-    int start_frame = -1;
-    int end_frame = -1;
+    //    int start_frame = -1;
+    //    int end_frame = -1;
     bool found_frame = false;
     int frame_number = 0;
     bool found_sync = 0;
@@ -52,23 +61,25 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, TimeCode start_tc, TimeCod
 		// It is, so we can be pretty sure it is an OK frame.
 		if (!found_frame)
 		{
-		    start_frame = ConvertTimeCodeToFrameNumber(&h, start_tc);
-		    end_frame = ConvertTimeCodeToFrameNumber(&h, end_tc);
-		    
-		    fprintf(stderr, "Start frame is %d\n", start_frame);
-		    fprintf(stderr, "End frame is %d\n", end_frame);
-		    if (end_frame == 0)
-			end_frame = INT_MAX;
+		    output_samples_per_frame = h.SamplesPerFrame();
 		    
 		    found_frame = true;
 		}
 		
-				// Process frame
+		// Process frame
+#if 0
 		if (frame_number >= start_frame && frame_number < end_frame)
 		{
 		    //fprintf(stderr, "Outputting frame %d (length=%d)\n", frame_number, h.FrameLength());
 		    std::write(1, input->GetPointer(), h.FrameLength());
 		}
+#endif
+		TimeCode current_time = ConvertSampleCountToTime(output_samples, output_samples_per_frame);
+		if (current_time >= start_tc && current_time < end_tc)
+		{
+		    std::write(1, input->GetPointer(), h.FrameLength());
+		}
+		output_samples += h.SamplesPerFrame() * h.SampleRate();
 #if 0
 		else
 		    fprintf(stderr, "Skipping frame %d\n", frame_number);
@@ -89,6 +100,7 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, TimeCode start_tc, TimeCod
     }
     catch (InsufficientDataException &)
     {
+      fprintf(stderr, "End of file found at %d frames.\n", frame_number);
 	// We've run out of data - that's fine, just suck up the remaining bytes
 	while (input->GetAvailable())
 	    input->Advance(1);
@@ -137,7 +149,8 @@ bool MP3Processor::ProcessFile(const TimeCode &begin_tc, const TimeCode &end_tc,
 	StreamBuffer input(131072, 128);	
 	input.SetSource(ds);
 	
-	ProcessFrames(&input, begin_tc, end_tc);
+	AndCut cut(begin_cut, end_cut);
+	ProcessFrames(&input, cut);
 	if (keep_id3)
 	    HandleID3Tag(&input);
 	
@@ -206,11 +219,15 @@ void MP3Processor::HandleEnd()
 
 void MP3Processor::HandleBeginTimeCode(const std::string &tc_str)
 {
+    TimeCode begin_tc;
     ParseTimeCode(&begin_tc, tc_str);
+    begin_cut = new BeforeTimeCut(begin_tc);
 }
 
 void MP3Processor::HandleEndTimeCode(const std::string &tc_str)
 {
+    TimeCode end_tc;
     ParseTimeCode(&end_tc, tc_str);
+    end_cut = new AfterTimeCut(end_tc);
 }
 

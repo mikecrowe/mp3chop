@@ -2,9 +2,11 @@
 #define MP3_PROCESSOR_H 1
 
 #include <string>
+#include <memory>
 #include "mp3_timecode.h"
 #include "header.h"
 #include "buffer.h"
+#include "cut.h"
 
 class MP3Processor
 {
@@ -33,8 +35,8 @@ public:
     };
     
 private:
-    TimeCode begin_tc;
-    TimeCode end_tc;
+    std::auto_ptr<Cut> begin_cut;
+    std::auto_ptr<Cut> end_cut;
     int files;
     bool keep_id3;
     
@@ -47,7 +49,7 @@ private:
     void HandleID3Tag(StreamBuffer *input);
     
 public:
-    MP3Processor() : begin_tc(0), end_tc(0), files(0) {};
+    MP3Processor() : files(0) {};
     
     void HandleFile(const std::string &);
     void HandleBeginTimeCode(const std::string &);
