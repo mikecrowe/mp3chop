@@ -1,0 +1,17 @@
+# Jamfile
+
+LINK on mp3chop = g++ ;
+C++ = g++ ;
+C++FLAGS = -Wall -pedantic -O2 ;
+
+Main mp3chop : header.cpp
+		main.cpp
+		mp3_timecode.cpp
+		buffer.cpp
+		file_data_source.cpp
+		file_data_sink.cpp
+		mp3_processor.cpp
+		chop.cpp
+		xing_frame.cpp ;
+
+
