@@ -63,7 +63,7 @@ int main(int ac, char *av[])
 #endif // HAVE_GETOPT_LONG
 
 #ifdef HAVE_GETOPT
-    const char *short_options = "-b:e:c:o:s:hdv";
+    const char *short_options = "-b:e:c:o:s:hdDv";
 #endif // HAVE_GETOPT
     
     MP3Processor processor;
