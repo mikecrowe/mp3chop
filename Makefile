@@ -14,3 +14,6 @@ buffer.o : buffer.h
 
 mp3_timecode.o : mp3_timecode.cpp mp3_timecode.h
 	g++ -c mp3_timecode.cpp
+
+clean :
+	rm -f *.o mp3chop *\~
