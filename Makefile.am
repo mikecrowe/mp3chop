@@ -16,10 +16,13 @@ mp3chop_SOURCES:=\
 	file_data_sink.h \
 	file_data_source.h \
 	file_exception.h \
+	filter.h \
 	header.h \
 	mp3_processor.h \
 	mp3_timecode.h \
+	platform_config.h \
 	types.h \
+	trace.h \
 	xing_frame.h
 
 
