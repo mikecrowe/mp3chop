@@ -3,9 +3,10 @@
 
 #include <string>
 #include <errno.h>
+#include "config.h"
 
 #if !defined(HAVE_STRERROR)
-#include <stringstream>
+#include <cstdio>
 #endif
 
 class FileException
@@ -21,9 +22,9 @@ public:
 #else
     const std::string Description()
     {
-	std::ostringstream ss;
-	ss << "error " << error_number;
-	return ss.str();
+	char buffer[40];
+	std::sprintf(buffer, "error %d", error_number);
+	return std::string(buffer);
     }
 #endif
     int Number() { return error_number; }
