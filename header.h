@@ -33,6 +33,14 @@ public:
 	}
 	return IsSync() && Valid();
     }
+
+    void Write(BYTE *p)
+    {
+	*p++ = (word >> 24);
+	*p++ = (word >> 16) & 0xff;
+	*p++ = (word >> 8) & 0xff;
+	*p++ = word & 0xff;
+    }
     
     bool IsSync() const
     {
@@ -177,10 +185,26 @@ public:
     {
 	return ((word & 0x00000008) >> 3);
     }
+
+    void SetCopyright(bool b)
+    {
+	if (b)
+	    word |= 0x8;
+	else
+	    word &= ~0x8;
+    }
     
     bool Original() const
     {
 	return ((word & 0x00000004) >> 2);
+    }
+
+    void SetOriginal(bool b)
+    {
+	if (b)
+	    word |= 0x4;
+	else
+	    word &= ~0x4;
     }
     
     int EmphasisCode() const
