@@ -81,10 +81,6 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 			if (!frames)
 			    xing_fixup_required = true;
 		    }
-#if 0
-		    if (xing.GetByteCount(&bytes))
-			fprintf(stderr, "It has %d bytes\n", bytes);
-#endif
 		    output->SetBookmark();
 		}
 
@@ -93,13 +89,6 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 			fprintf(stderr, "Warning: output_samples_per_frame mismatch.\n");
 		}
 		// Process frame
-#if 0
-		if (input_frame_number >= start_frame && frame_number < end_frame)
-		{
-		    //fprintf(stderr, "Outputting frame %d (length=%d)\n", frame_number, h.FrameLength());
-//		    std::write(1, input->GetPointer(), h.FrameLength());
-		}
-#endif
 		TimeCode current_time((static_cast<long long>(input_frame_number) * output_samples_per_frame * 100LL)
 							  / static_cast<long long>(output_sample_rate));
 		if (chop->IsFrameRequired(input_frame_number, current_time))
@@ -108,10 +97,6 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		    output_frame_number++;
 		    frame_offsets.push_back(output->GetOffset());
 		}
-#if 0
-		else
-		    fprintf(stderr, "Skipping frame %d\n", input_frame_number);
-#endif
 		
 		// Now move past it.
 		input->Advance(h.FrameLength());
@@ -141,7 +126,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 	    double bit = frame_offsets.size()/100;
 	    for(int i = 0; i < 100; ++i)
 	    {
-		int frame = i * bit;
+		int frame = i * reinterpret_cast<int>(bit);
 		int offset = frame_offsets[frame];
 		double fraction = (double)offset/(double)file_length;
 		BYTE toc_entry = fraction * 256;
