@@ -4,6 +4,8 @@ dnl Since mp3chop is written in C++ a lot of this is redundant.
 dnl It also seems that autoconf isn't geared up to look for C++
 dnl specific headers so we just assume they are there.
 
+dnl If you change the version here make sure you also change it
+dnl in config_win32.h.
 AC_INIT(main.cpp)
 AM_INIT_AUTOMAKE(mp3chop, 0.02)
 AM_CONFIG_HEADER(config.h)
@@ -26,6 +28,8 @@ AC_PROG_CXX
 dnl AC_PROG_MAKE_SET
 AC_PROG_INSTALL
 dnl AC_PROG_CPP
+AC_PROG_AWK
+AC_PROG_LN_S
 
 dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen, LIBDL="-ldl")
@@ -38,7 +42,8 @@ dnl Checks for header files.
 AC_HEADER_STDC
 
 dnl Checks for typedefs, structures, and compiler characteristics.
-dnl AC_C_CONST
+AC_C_CONST
+AC_C_INLINE
 dnl AC_TYPE_PID_T
 dnl AC_HEADER_TIME
 dnl AC_TYPE_SIZE_T
@@ -51,5 +56,12 @@ dnl AC_FUNC_VPRINTF
 # Do we have GNU getopt?
 AC_CHECK_FUNCS(getopt_long getopt)
 AC_CHECK_FUNCS(strerror)
+AC_CHECK_FUNCS(memmove)
+AC_FUNC_MEMCMP(memcmp)
+
+AC_CHECK_HEADERS(fcntl.h)
+AC_CHECK_HEADERS(string.h)
+AC_CHECK_HEADERS(unistd.h)
+AC_CHECK_HEADERS(fcntl.h)
 
 AC_OUTPUT(Makefile)
