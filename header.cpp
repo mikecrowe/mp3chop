@@ -54,3 +54,24 @@ const int MPEGHeader::samplerate_table[4][4] =
 	44100, 48000, 32000, -1
     }
 };
+
+void MPEGHeader::Dump()
+{
+    if (!Valid())
+	printf("NOT VALID!!!!\n");
+    printf("Word: %08x\n", word);
+    printf("Sync: %d\n", IsSync());
+    printf("CRC protected: %d\n", Protected());
+    printf("Version: %s\n", VersionString());
+    printf("Layer: %d\n", LayerNumber());
+    printf("Bitrate: %d\n", Bitrate());
+    printf("Samplerate: %d\n", SampleRate());
+    printf("Padded: %d\n", Padded());
+    printf("Private: %d\n", Private());
+    printf("Channel mode: %s\n", ChannelModeName());
+    printf("Copyright: %d\n", Copyright());
+    printf("Original: %d\n", Original());
+    printf("Emphasis: %s\n", EmphasisName());
+    printf("Frame length: %d\n", FrameLength());
+    printf("Data length: %d\n", DataLength());
+}
