@@ -32,12 +32,17 @@ struct custom_char_traits
     assign(char_type& __c1, const char_type& __c2)
     { __c1 = __c2; }
 
-    static char_type* 
-    assign(char_type* s, size_t n, char_type a)
+    static char_type *assign(char_type* s, size_t n, char_type a)
     {
 	for (size_t i=0; i<n; ++i)
 	    s[i] = a;
 	return s;
+    }
+
+    // GCC2 wants that version of assign to be called set for some reason.
+    static char_type *set(char_type* s, size_t n, char_type a)
+    {
+	assign(s, n, a);
     }
 
     static size_t length(const char_type *s)
