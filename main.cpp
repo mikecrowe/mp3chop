@@ -1,4 +1,5 @@
 #include "platform_config.h"
+#include <iostream>
 #include "header.h"
 #include "mp3_timecode.h"
 #include "buffer.h"
@@ -8,7 +9,9 @@
 
 // If we have GNU getopt_long then make sure we include its declaration.
 #if defined(HAVE_GETOPT_LONG)
+#if !defined(_GNU_SOURCE)
 #define _GNU_SOURCE
+#endif
 #include <getopt.h>
 #endif
 

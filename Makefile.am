@@ -11,6 +11,7 @@ mp3chop_SOURCES:=\
 	chop.cpp \
 	xing_frame.cpp \
 	buffer.h \
+	byte_string.h \
 	chop.h \
 	config.h \
 	file_data_sink.h \
