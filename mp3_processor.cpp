@@ -17,7 +17,7 @@ int MP3Processor::ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc
     return ((h->SampleRate() * tc.GetAsHundredths()) / 100)/(h->SamplesPerFrame());
 }
 
-bool MP3Processor::IsID3Header(const BYTE *p)
+bool MP3Processor::IsID3V1Header(const BYTE *p)
 {
     return (p[0] == 'T') && (p[1] == 'A') && (p[2] == 'G');
 }
@@ -167,7 +167,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
     }
 }
 
-void MP3Processor::HandleID3Tag(InputStreamBuffer *input, OutputStreamBuffer *output)
+void MP3Processor::HandleID3V1Tag(InputStreamBuffer *input, OutputStreamBuffer *output)
 {
     try
     {
@@ -175,7 +175,7 @@ void MP3Processor::HandleID3Tag(InputStreamBuffer *input, OutputStreamBuffer *ou
 	input->Rewind(128);
 	BYTE ch = *(input->GetPointer());
 	fprintf(stderr, "Byte at -128 is %c (0x%x)\n", isprint(ch) ? ch : '.', ch);
-	if (IsID3Header(input->GetPointer()))
+	if (IsID3V1Header(input->GetPointer()))
 	{
 	    fprintf(stderr, "Found an ID3 tag.\n");
 	    // We've got an ID3 header. Just output the block.
@@ -258,8 +258,8 @@ bool MP3Processor::ProcessFile(DataSource *data_source, DataSink *data_sink, Cho
 	output.SetSink(data_sink);
 	
 	ProcessFrames(&input, &output, chop, filter);
-	if (keep_id3)
-	    HandleID3Tag(&input, &output);
+	if (m_keep_id3v1)
+	    HandleID3V1Tag(&input, &output);
 	
 	return true;
     }
@@ -325,7 +325,7 @@ void MP3Processor::HandleFile(const std::string &file)
 		exit(2);
 	    }
 	}
-	++files;
+	++m_files;
     }
     catch (FileException &e)
     {
@@ -335,7 +335,7 @@ void MP3Processor::HandleFile(const std::string &file)
 
 void MP3Processor::HandleEnd()
 {
-    if (!files)
+    if (!m_files)
 	HandleFile("-");
 }
 

@@ -90,7 +90,7 @@ int main(int ac, char *av[])
 		processor.HandleForceOriginal(atoi(optarg));
 		break;
 	    case 'i':
-		processor.SetKeepID3(true);
+		processor.SetKeepID3V1(true);
 		break;
 	    case 'h':
 		Help();

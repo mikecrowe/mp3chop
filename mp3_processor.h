@@ -40,28 +40,28 @@ private:
     std::auto_ptr<Chop> end_chop;
     std::auto_ptr<SCMSFilter> scms_filter;
     
-    int files;
+    int m_files;
     char m_mode;
-    bool keep_id3;
+    bool m_keep_id3v1;
     
     static void ParseTimeCode(TimeCode *tc, const std::string &t);
     static int ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc);
-    static bool IsID3Header(const BYTE *p);
+    static bool IsID3V1Header(const BYTE *p);
     
     bool ProcessFile(DataSource *data_source, DataSink *data_sink, Chop *chop, Filter *filter);
     void ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *output, Chop *chop, Filter *filter);
-    void HandleID3Tag(InputStreamBuffer *input, OutputStreamBuffer *output);
+    void HandleID3V1Tag(InputStreamBuffer *input, OutputStreamBuffer *output);
     bool GetFirstHeader(InputStreamBuffer *input, MPEGHeader *header);
     bool DumpFirstHeader(DataSource *data_source);
     void CreateSCMSFilter();
     
 public:
-    MP3Processor() : files(0), m_mode('c'), keep_id3(false) {};
+    MP3Processor() : m_files(0), m_mode('c'), m_keep_id3v1(false) {};
     
     void HandleFile(const std::string &);
     void HandleBeginTimeCode(const std::string &);
     void HandleEndTimeCode(const std::string &);
-    void SetKeepID3(bool b = true) { keep_id3 = b; }
+    void SetKeepID3V1(bool b = true) { m_keep_id3v1 = b; }
     void HandleEnd();
     void HandleMode(char);
     void HandleForceCopyright(bool b);
