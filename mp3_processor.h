@@ -7,6 +7,7 @@
 #include "header.h"
 #include "buffer.h"
 #include "chop.h"
+#include "filter.h"
 
 class MP3Processor
 {
@@ -37,6 +38,8 @@ public:
 private:
     std::auto_ptr<Chop> begin_chop;
     std::auto_ptr<Chop> end_chop;
+    std::auto_ptr<SCMSFilter> scms_filter;
+    
     int files;
     char m_mode;
     bool keep_id3;
@@ -45,14 +48,15 @@ private:
     static int ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc);
     static bool IsID3Header(const BYTE *p);
     
-    bool ProcessFile(DataSource *data_source, DataSink *data_sink, Chop *chop);
-    void ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *output, Chop *chop);
+    bool ProcessFile(DataSource *data_source, DataSink *data_sink, Chop *chop, Filter *filter);
+    void ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *output, Chop *chop, Filter *filter);
     void HandleID3Tag(InputStreamBuffer *input, OutputStreamBuffer *output);
     bool GetFirstHeader(InputStreamBuffer *input, MPEGHeader *header);
     bool DumpFirstHeader(DataSource *data_source);
+    void CreateSCMSFilter();
     
 public:
-    MP3Processor() : files(0), m_mode('c') {};
+    MP3Processor() : files(0), m_mode('c'), keep_id3(false) {};
     
     void HandleFile(const std::string &);
     void HandleBeginTimeCode(const std::string &);
@@ -60,6 +64,8 @@ public:
     void SetKeepID3(bool b = true) { keep_id3 = b; }
     void HandleEnd();
     void HandleMode(char);
+    void HandleForceCopyright(bool b);
+    void HandleForceOriginal(bool b);
 };
 
 #endif
