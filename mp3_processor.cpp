@@ -75,7 +75,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 
 		if (xing.Read(input->GetPointer(), input->GetPointer() + h.FrameLength()))
 		{
-		    int frames, bytes;
+		    int frames;
 		    if (xing.GetFrameCount(&frames))
 		    {
 			if (!frames)
@@ -126,10 +126,10 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 	    double bit = frame_offsets.size()/100;
 	    for(int i = 0; i < 100; ++i)
 	    {
-		int frame = i * reinterpret_cast<int>(bit);
+		int frame = i * static_cast<int>(bit);
 		int offset = frame_offsets[frame];
 		double fraction = (double)offset/(double)file_length;
-		BYTE toc_entry = fraction * 256;
+		BYTE toc_entry = static_cast<BYTE>(fraction * 256);
 		xing.SetTocEntry(i, toc_entry);
 	    }
 	    output->GoToBookmark();
