@@ -26,4 +26,9 @@ bool AfterTimeChop::IsFrameRequired(const int frame_index, const TimeCode frame_
     return frame_tc < cut_time;
 }
 
+bool NullChop::IsFrameRequired(const int frame_index, const TimeCode frame_tc)
+{
+    return false;
+}
+
 

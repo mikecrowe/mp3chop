@@ -41,4 +41,10 @@ public:
     virtual bool IsFrameRequired(const int frame_index, const TimeCode frame_tc);
 };
 
+class NullChop : public Chop
+{
+public:
+    virtual bool IsFrameRequired(const int frame_index, const TimeCode frame_tc);
+};
+
 #endif
