@@ -29,8 +29,16 @@
 
 2004-02-12  Mike Crowe <mac@fysh.org>
 
-	Update configure.in to include size_t check. Can't use STDBOOL as
-	recommended by autoscan because old autoconf doesn't grok it.
+	* Update configure.in to include size_t check. Can't use STDBOOL
+	as recommended by autoscan because old autoconf doesn't grok it.
 
-	Lose warning from newer automakes regarding += in Makefile.am.
+	* Lose warning from newer automakes regarding += in Makefile.am.
 	
+2004-05-04  Mike Crowe <mac@fysh.org>
+
+	* Update mp3_processor.cpp to remove debugging code.
+
+	* Update main.cpp so that the -D short option is correctly
+	supported.
+
+	* Released as v1.04
