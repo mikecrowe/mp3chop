@@ -18,6 +18,7 @@ class StreamBuffer
 	DataSource *source;
 	BYTE *input_buffer;
 	int input_size;
+	int input_min;
 	int input_writep;
 	int input_readp;
 
@@ -26,7 +27,7 @@ protected:
 	int Space() const;
 
 public:
-	StreamBuffer(int size);
+	StreamBuffer(int size, int lookbehind);
 	~StreamBuffer();
 	DataSource *SetSource(DataSource *new_source)
 	{
@@ -42,6 +43,9 @@ public:
 	}
 	int GetAvailable() const;
 	void Advance(int count);
+	void Rewind(int count);
+
+	bool IsEOFAt(int count);
 };
 
 #endif
