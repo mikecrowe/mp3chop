@@ -151,12 +151,12 @@ public:
     
     bool Padded() const
     {
-	return ((word & 0x00000200) >> 9);
+	return ((word & 0x00000200) >> 9) != 0;
     }
 
     bool Private() const
     {
-	return ((word & 0x00000100) >> 8);
+	return ((word & 0x00000100) >> 8) != 0;
     }
     
     int ChannelModeCode() const
@@ -183,7 +183,7 @@ public:
     
     bool Copyright() const
     {
-	return ((word & 0x00000008) >> 3);
+	return ((word & 0x00000008) >> 3) != 0;
     }
 
     void SetCopyright(bool b)
@@ -196,7 +196,7 @@ public:
     
     bool Original() const
     {
-	return ((word & 0x00000004) >> 2);
+	return ((word & 0x00000004) >> 2) != 0;
     }
 
     void SetOriginal(bool b)

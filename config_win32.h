@@ -11,10 +11,10 @@
 #define STDC_HEADERS 1
 
 /* Define if you have the getopt function.  */
-#define HAVE_GETOPT 1
+#undef HAVE_GETOPT
 
 /* Define if you have the getopt_long function.  */
-#define HAVE_GETOPT_LONG 1
+#undef HAVE_GETOPT_LONG
 
 /* Define if you have the memmove function.  */
 #define HAVE_MEMMOVE 1
@@ -29,7 +29,10 @@
 #define HAVE_STRING_H 1
 
 /* Define if you have the <unistd.h> header file.  */
-#define HAVE_UNISTD_H 1
+#undef HAVE_UNISTD_H
+
+/* Define if you have the Win32 <io.h> header file.  */
+#define HAVE_IO_H
 
 /* Name of package */
 #define PACKAGE "mp3chop"

@@ -1,8 +1,12 @@
 #include "mp3_processor.h"
 #include <cstdio>
 #include <climits>
+#include <iostream>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <vector>
+#include <memory>
 #include "file_data_source.h"
 #include "file_data_sink.h"
 #include "xing_frame.h"
@@ -97,8 +101,8 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		    fprintf(stderr, "Warning: output_samples_per_frame mismatch.\n");
 		}
 		// Process frame
-		TimeCode current_time((static_cast<long long>(input_frame_number) * output_samples_per_frame * 100LL)
-				      / static_cast<long long>(output_sample_rate));
+		TimeCode current_time((static_cast<LONGLONG>(input_frame_number) * output_samples_per_frame * LONGLONGLITERAL(100))
+				      / static_cast<LONGLONG>(output_sample_rate));
 		if (chop->IsFrameRequired(input_frame_number, current_time))
 		{
 		    if (filter)
@@ -418,7 +422,7 @@ void MP3Processor::HandleBeginTimeCode(const std::string &tc_str)
 {
     TimeCode begin_tc;
     ParseTimeCode(&begin_tc, tc_str);
-	auto_ptr<Chop> p(new BeforeTimeChop(begin_tc));
+    std::auto_ptr<Chop> p(new BeforeTimeChop(begin_tc));
     begin_chop = p;
 }
 
@@ -426,7 +430,7 @@ void MP3Processor::HandleEndTimeCode(const std::string &tc_str)
 {
     TimeCode end_tc;
     ParseTimeCode(&end_tc, tc_str);
-	auto_ptr<Chop> p(new AfterTimeChop(end_tc));
+    std::auto_ptr<Chop> p(new AfterTimeChop(end_tc));
     end_chop = p;
 }
 

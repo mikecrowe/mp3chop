@@ -44,7 +44,7 @@ public:
     bool GetByteCount(int *b) const
     {
 	*b = bytes;
-	return (flags & BYTES_FLAG);
+	return (flags & BYTES_FLAG) != 0;
     }
     void SetFrameCount(int f);
     void SetTocEntry(int i, BYTE value);

@@ -39,7 +39,7 @@ public:
 	const std::string m_error;
     public:
 	BadFileException(const std::string &f, const std::string &e)
-	    : file(f), m_error(e) {}
+	    : m_file(f), m_error(e) {}
 	virtual ~BadFileException() {}
 	virtual void Report();
     };

@@ -1,6 +1,14 @@
 #include "file_data_source.h"
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+#ifdef HAVE_FCNTL_H
 #include <fcntl.h>
+#endif
+#ifdef HAVE_IO_H
+#include <io.h>
+#endif
+
 
 FileDataSource::FileDataSource()
     : opened(false), fd(-1)

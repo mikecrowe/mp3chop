@@ -1,4 +1,4 @@
-#include "config.h"
+#include "platform_config.h"
 #include "header.h"
 #include "mp3_timecode.h"
 #include "buffer.h"
@@ -43,6 +43,7 @@ void Help()
 
 int main(int ac, char *av[])
 {
+#ifdef HAVE_GETOPT_LONG
     static struct option long_options[] =
     {
 	{ "begin", 1, NULL, 'b' },
@@ -54,8 +55,11 @@ int main(int ac, char *av[])
 	{ "dump-header", 0, NULL, 'd' },
 	{ 0, 0, 0, 0 }
     };
-    
+#endif // HAVE_GETOPT_LONG
+
+#ifdef HAVE_GETOPT
     const char *short_options = "-b:e:c:o:s:hd";
+#endif // HAVE_GETOPT
     
     MP3Processor processor;
     processor.SetKeepID3V1(true);
