@@ -26,3 +26,11 @@
 2004-02-10  Mike Crowe <mac@fysh.org>
 
 	* Released as v1.03
+
+2004-02-12  Mike Crowe <mac@fysh.org>
+
+	Update configure.in to include size_t check. Can't use STDBOOL as
+	recommended by autoscan because old autoconf doesn't grok it.
+
+	Lose warning from newer automakes regarding += in Makefile.am.
+	

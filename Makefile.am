@@ -27,7 +27,7 @@ mp3chop_SOURCES:=\
 	xing_frame.h
 
 
-MAINTAINERCLEANFILES+=\
+MAINTAINERCLEANFILES:=\
 	$(srcdir)/Makefile.in \
 	$(srcdir)/configure \
 	$(srcdir)/config.sub \
