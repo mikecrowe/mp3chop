@@ -1,0 +1,25 @@
+I have high hopes for this program but I don't seem to get the time to
+work on it. Anyway, here's a few ideas.
+
+Complex chops
+=============
+The Chop classes in chop.h allude to a more versatile mechanism for
+specifying which frames should be output. It would be nice for the program
+to take a file that contained lines something like this:
+
+  outfile1: (t < 00:10:00) || (t > 00:20:00)
+  outfile2: (t >= 00:10:00) && (t <= 00:20:00)
+
+Of course, this would be good for the command line to, just a single
+expression could be specified. This would be particularly good for removing 
+the musical interludes from Goon Shows for example.
+
+Graphical UI
+============
+Specifying the above using some sort of graphical UI. The code short port
+to Windows relatively easily and there is scope for factoring out the real
+implementation to some sort of library that can be used by multiple UI
+implementations (e.g. Gnome, KDE, Win32).
+
+Mike Crowe
+2000/11/05.

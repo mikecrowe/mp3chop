@@ -1,0 +1,16 @@
+mp3chop
+=======
+
+A natty little utility for extracting bits of mp3 files.
+
+To install, run:
+
+ ./configure && make install
+
+There is no documentation apart from the usage report gleaned by running
+
+ mp3chop --help
+
+
+Mike Crowe, <mac@fysh.org>
+2000/11/05
