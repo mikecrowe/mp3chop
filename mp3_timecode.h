@@ -11,11 +11,11 @@ public:
     TimeCode() {}
     explicit TimeCode(int hundredths) : h(hundredths) {}
     TimeCode(int hours, int minutes, int seconds, int hundredths) :
-		h(hours*360000 + minutes*6000 + seconds * 100 + hundredths) {}
-
+	h(hours*360000 + minutes*6000 + seconds * 100 + hundredths) {}
+    
     void Set(int hours, int minutes, int seconds, int hundredths)
     {
-		h = hours*360000 + minutes*6000 + seconds * 100 + hundredths;
+	h = hours*360000 + minutes*6000 + seconds * 100 + hundredths;
     }
     void Set(int hundredths)
     {
