@@ -21,4 +21,8 @@
 
 2004-02-10  Mike Crowe <mac@fysh.org>
 
-	* Now compiles on GCC3.
+	* Now compiles on GCC3 in addition to GCC2.
+
+2004-02-10  Mike Crowe <mac@fysh.org>
+
+	* Released as v1.03

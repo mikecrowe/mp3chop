@@ -7,7 +7,7 @@ dnl specific headers so we just assume they are there.
 dnl If you change the version here make sure you also change it
 dnl in config_win32.h.
 AC_INIT(main.cpp)
-AM_INIT_AUTOMAKE(mp3chop, 1.02)
+AM_INIT_AUTOMAKE(mp3chop, 1.03)
 AM_CONFIG_HEADER(config.h)
 AC_CANONICAL_HOST
 
