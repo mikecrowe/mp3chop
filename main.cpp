@@ -83,9 +83,10 @@ int main(int ac, char *av[])
 		break;
 	    case 'h':
 		Help();
-		exit(0);
+		return 0;
+		
 	    case '?':
-		exit(1);
+		return 1;
 	    }
 	}
 	processor.HandleEnd();
