@@ -22,7 +22,7 @@ mp3chop_SOURCES:=\
 	xing_frame.h
 
 
-CXXFLAGS+=-DMP3CHOP_VERSION="\"$(VERSION)\""
+CXXFLAGS=@CXXFLAGS@ -DMP3CHOP_VERSION="\"$(VERSION)\""
 
 MAINTAINERCLEANFILES+=\
 	$(srcdir)/Makefile.in \
