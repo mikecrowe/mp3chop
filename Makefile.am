@@ -6,6 +6,7 @@ mp3chop_SOURCES:=\
 	buffer.cpp \
 	file_data_source.cpp \
 	file_data_sink.cpp \
+	filter.cpp \
 	mp3_processor.cpp \
 	chop.cpp \
 	xing_frame.cpp \
