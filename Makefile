@@ -1,6 +1,6 @@
 MKDEP=./mkdep
 CXX=g++
-CXXFLAGS=-c -Wall -pedantic
+CXXFLAGS=-c -Wall
 LD=g++
 #LDFLAGS=
 
@@ -10,7 +10,7 @@ SOURCES=header.cpp \
 	buffer.cpp \
 	file_data_source.cpp \
 	mp3_processor.cpp \
-	cut.cpp
+	chop.cpp
 
 OBJS1=$(SOURCES:%.cpp=%.o)
 OBJS=$(OBJS1:%.c=%.o)

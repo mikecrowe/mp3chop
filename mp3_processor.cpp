@@ -17,7 +17,7 @@ bool MP3Processor::IsID3Header(const BYTE *p)
     return (p[0] == 'T') && (p[1] == 'A') && (p[2] == 'G');
 }
 
-void MP3Processor::ProcessFrames(StreamBuffer *input, Cut *cut)
+void MP3Processor::ProcessFrames(StreamBuffer *input, Chop *chop)
 {
     //unsigned long header;
     MPEGHeader h;
@@ -77,7 +77,7 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, Cut *cut)
 #endif
 		TimeCode current_time((static_cast<long long>(frame_number) * output_samples_per_frame * 100LL)
 							  / static_cast<long long>(output_sample_rate));
-		if (cut->IsFrameRequired(frame_number, current_time))
+		if (chop->IsFrameRequired(frame_number, current_time))
 		{
 		    std::write(1, input->GetPointer(), h.FrameLength());
 		}
@@ -135,7 +135,7 @@ void MP3Processor::HandleID3Tag(StreamBuffer *input)
 
 
 
-bool MP3Processor::ProcessFile(DataSource *ds, Cut *cut)
+bool MP3Processor::ProcessFile(DataSource *ds, Chop *chop)
 {
 #if 0
     fprintf(stderr, " Start time: %d:%02d:%02d.%02d\n",
@@ -151,7 +151,7 @@ bool MP3Processor::ProcessFile(DataSource *ds, Cut *cut)
 	StreamBuffer input(131072, 128);	
 	input.SetSource(ds);
 	
-	ProcessFrames(&input, cut);
+	ProcessFrames(&input, chop);
 	if (keep_id3)
 	    HandleID3Tag(&input);
 	
@@ -199,8 +199,8 @@ void MP3Processor::HandleFile(const std::string &file)
 		else
 			ds.Open(file);
 		
-		AndCut cut(begin_cut.get(), end_cut.get());
-		if (!ProcessFile(&ds, &cut))
+		AndChop chop(begin_chop.get(), end_chop.get());
+		if (!ProcessFile(&ds, &chop))
 		{
 			fprintf(stderr, "Failed to process file \'%s\'\n", optarg);
 			exit(2);
@@ -223,15 +223,15 @@ void MP3Processor::HandleBeginTimeCode(const std::string &tc_str)
 {
     TimeCode begin_tc;
     ParseTimeCode(&begin_tc, tc_str);
-	auto_ptr<Cut> p(new BeforeTimeCut(begin_tc));
-    begin_cut = p;
+	auto_ptr<Chop> p(new BeforeTimeChop(begin_tc));
+    begin_chop = p;
 }
 
 void MP3Processor::HandleEndTimeCode(const std::string &tc_str)
 {
     TimeCode end_tc;
     ParseTimeCode(&end_tc, tc_str);
-	auto_ptr<Cut> p(new AfterTimeCut(end_tc));
-    end_cut = p;
+	auto_ptr<Chop> p(new AfterTimeChop(end_tc));
+    end_chop = p;
 }
 

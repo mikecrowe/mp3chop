@@ -6,7 +6,7 @@
 #include "mp3_timecode.h"
 #include "header.h"
 #include "buffer.h"
-#include "cut.h"
+#include "chop.h"
 
 class MP3Processor
 {
@@ -35,8 +35,8 @@ public:
     };
     
 private:
-    std::auto_ptr<Cut> begin_cut;
-    std::auto_ptr<Cut> end_cut;
+    std::auto_ptr<Chop> begin_chop;
+    std::auto_ptr<Chop> end_chop;
     int files;
     bool keep_id3;
     
@@ -44,8 +44,8 @@ private:
     static int ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc);
     static bool IsID3Header(const BYTE *p);
     
-    bool ProcessFile(DataSource *ds, Cut *cut);
-    void ProcessFrames(StreamBuffer *input, Cut *cut);
+    bool ProcessFile(DataSource *ds, Chop *chop);
+    void ProcessFrames(StreamBuffer *input, Chop *chop);
     void HandleID3Tag(StreamBuffer *input);
     
 public:
