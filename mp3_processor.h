@@ -44,8 +44,8 @@ private:
     static int ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc);
     static bool IsID3Header(const BYTE *p);
     
-    bool ProcessFile(const TimeCode &begin_tc, const TimeCode &end_tc, DataSource *ds);
-    void ProcessFrames(StreamBuffer *input, TimeCode start_tc, TimeCode end_tc);
+    bool ProcessFile(DataSource *ds, Cut *cut);
+    void ProcessFrames(StreamBuffer *input, Cut *cut);
     void HandleID3Tag(StreamBuffer *input);
     
 public:

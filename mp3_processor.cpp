@@ -12,18 +12,12 @@ int MP3Processor::ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc
     return ((h->SampleRate() * tc.GetAsHundredths()) / 100)/(h->SamplesPerFrame());
 }
 
-TimeCode MP3Processor::ConvertSampleCountToTime(long long sample_count, int sample_rate)
-{
-    const long long pos = (static_cast<long long>(sample_count) * 100LL)/static_cast<int64>(sample_rate);
-    return TimeCode(static_cast<int>(pos));
-}
-
 bool MP3Processor::IsID3Header(const BYTE *p)
 {
     return (p[0] == 'T') && (p[1] == 'A') && (p[2] == 'G');
 }
 
-void MP3Processor::ProcessFrames(StreamBuffer *input, TimeCode start_tc, TimeCode end_tc)
+void MP3Processor::ProcessFrames(StreamBuffer *input, Cut *cut)
 {
     //unsigned long header;
     MPEGHeader h;
@@ -33,6 +27,8 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, TimeCode start_tc, TimeCod
     bool found_frame = false;
     int frame_number = 0;
     bool found_sync = 0;
+	int output_samples_per_frame = 0;
+	int output_sample_rate = 0;
     
     try
     {
@@ -62,10 +58,15 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, TimeCode start_tc, TimeCod
 		if (!found_frame)
 		{
 		    output_samples_per_frame = h.SamplesPerFrame();
+			output_sample_rate = h.SampleRate();
 		    
 		    found_frame = true;
 		}
-		
+
+		if (h.SamplesPerFrame() != output_samples_per_frame)
+		{
+			fprintf(stderr, "Warning: output_samples_per_frame mismatch.\n");
+		}
 		// Process frame
 #if 0
 		if (frame_number >= start_frame && frame_number < end_frame)
@@ -74,12 +75,12 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, TimeCode start_tc, TimeCod
 		    std::write(1, input->GetPointer(), h.FrameLength());
 		}
 #endif
-		TimeCode current_time = ConvertSampleCountToTime(output_samples, output_samples_per_frame);
-		if (current_time >= start_tc && current_time < end_tc)
+		TimeCode current_time((static_cast<long long>(frame_number) * output_samples_per_frame * 100LL)
+							  / static_cast<long long>(output_sample_rate));
+		if (cut->IsFrameRequired(frame_number, current_time))
 		{
 		    std::write(1, input->GetPointer(), h.FrameLength());
 		}
-		output_samples += h.SamplesPerFrame() * h.SampleRate();
 #if 0
 		else
 		    fprintf(stderr, "Skipping frame %d\n", frame_number);
@@ -134,8 +135,9 @@ void MP3Processor::HandleID3Tag(StreamBuffer *input)
 
 
 
-bool MP3Processor::ProcessFile(const TimeCode &begin_tc, const TimeCode &end_tc, DataSource *ds)
+bool MP3Processor::ProcessFile(DataSource *ds, Cut *cut)
 {
+#if 0
     fprintf(stderr, " Start time: %d:%02d:%02d.%02d\n",
 	    begin_tc.GetHours(), begin_tc.GetMinutes(), begin_tc.GetSeconds(), begin_tc.GetHundredths());
     if (end_tc.GetAsHundredths())
@@ -143,13 +145,12 @@ bool MP3Processor::ProcessFile(const TimeCode &begin_tc, const TimeCode &end_tc,
 	fprintf(stderr, " End time: %d:%02d:%02d.%02d\n",
 		end_tc.GetHours(), end_tc.GetMinutes(), end_tc.GetSeconds(), end_tc.GetHundredths());
     }
-    
+#endif
     try
     {
 	StreamBuffer input(131072, 128);	
 	input.SetSource(ds);
 	
-	AndCut cut(begin_cut, end_cut);
 	ProcessFrames(&input, cut);
 	if (keep_id3)
 	    HandleID3Tag(&input);
@@ -191,23 +192,24 @@ void MP3Processor::HandleFile(const std::string &file)
 {
     try
     {
-	FileDataSource ds;
+		FileDataSource ds;
 		
-	if (file == "-")
-	    ds.OpenStandardInput();
-	else
-	    ds.Open(file);
-	
-	if (!ProcessFile(begin_tc, end_tc, &ds))
-	{
-	    fprintf(stderr, "Failed to process file \'%s\'\n", optarg);
-	    exit(2);
-	}
-	++files;
+		if (file == "-")
+			ds.OpenStandardInput();
+		else
+			ds.Open(file);
+		
+		AndCut cut(begin_cut.get(), end_cut.get());
+		if (!ProcessFile(&ds, &cut))
+		{
+			fprintf(stderr, "Failed to process file \'%s\'\n", optarg);
+			exit(2);
+		}
+		++files;
     }
     catch (FileException &e)
     {
-	throw BadFileException(file, e.Description());
+		throw BadFileException(file, e.Description());
     }
 }
 
@@ -221,13 +223,15 @@ void MP3Processor::HandleBeginTimeCode(const std::string &tc_str)
 {
     TimeCode begin_tc;
     ParseTimeCode(&begin_tc, tc_str);
-    begin_cut = new BeforeTimeCut(begin_tc);
+	auto_ptr<Cut> p(new BeforeTimeCut(begin_tc));
+    begin_cut = p;
 }
 
 void MP3Processor::HandleEndTimeCode(const std::string &tc_str)
 {
     TimeCode end_tc;
     ParseTimeCode(&end_tc, tc_str);
-    end_cut = new AfterTimeCut(end_tc);
+	auto_ptr<Cut> p(new AfterTimeCut(end_tc));
+    end_cut = p;
 }
 

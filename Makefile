@@ -9,7 +9,8 @@ SOURCES=header.cpp \
 	mp3_timecode.cpp \
 	buffer.cpp \
 	file_data_source.cpp \
-	mp3_processor.cpp
+	mp3_processor.cpp \
+	cut.cpp
 
 OBJS1=$(SOURCES:%.cpp=%.o)
 OBJS=$(OBJS1:%.c=%.o)

@@ -1,6 +1,8 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
+#include "mp3_timecode.h"
+
 class Cut
 {
  public:
@@ -17,6 +19,7 @@ class AndCut : public Cut
 
  public:
     AndCut(Cut *l, Cut *r) : left(l), right(r) {}
+    virtual bool IsFrameRequired(const int frame_index, const TimeCode frame_tc);
 };
 
 
@@ -25,7 +28,7 @@ class BeforeTimeCut : public Cut
     TimeCode cut_time;
     
  public:
-    CutBeforeTimeEditor(const TimeCode tc) : Editor(n), cut_time(tc) {}
+    BeforeTimeCut(const TimeCode tc) : cut_time(tc) {}
     virtual bool IsFrameRequired(const int frame_index, const TimeCode frame_tc);
 };
 
@@ -33,11 +36,9 @@ class AfterTimeCut : public Cut
 {
     TimeCode cut_time;
     
- protected:
-    virtual bool InternalIsRequired(const int frame_index, const TimeCode frame_tc);
-    
  public:
-    CutAfterTimeEditor(const TimeCode tc) : Editor(n), cut_time(tc) {}
+    AfterTimeCut(const TimeCode tc) : cut_time(tc) {}
+    virtual bool IsFrameRequired(const int frame_index, const TimeCode frame_tc);
 };
 
 #endif
