@@ -32,6 +32,7 @@ void Help()
 	    "   --begin=<time>, -b <time>  Do not output anything before <time>\n"
 	    "   --end=<time>, -e <time>    Do not output anything after <time>\n"
 	    "   --help, -h                 Display this help\n"
+	    "   --dump-header, -d          Dump the header of the first valid frame\n"
 	    "\n"
 	    "   <time> is of the form 'mm:ss:hh' mm=minutes, ss=seconds, hh=hundredths\n"
 	    "\n");
@@ -45,10 +46,11 @@ int main(int ac, char *av[])
 	{ "end", 1, NULL, 'e' },
 	{ "id3", 0, NULL, 'i' },
 	{ "help", 0, NULL, 'h' },
+	{ "dump-header", 0, NULL, 'd' },
 	{ 0, 0, 0, 0 }
     };
     
-    const char *short_options = "-b:e:ih";
+    const char *short_options = "-b:e:ihd";
     
     MP3Processor processor;
     
@@ -84,6 +86,10 @@ int main(int ac, char *av[])
 	    case 'h':
 		Help();
 		return 0;
+
+	    case 'd':
+		processor.HandleMode('d');
+		break;
 		
 	    case '?':
 		return 1;
