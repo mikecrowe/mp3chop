@@ -22,6 +22,7 @@ class InputStreamBuffer
     int input_min;
     int input_writep;
     int input_readp;
+    int buffer_start_offset;
     
 protected:
     void ShoveUp();
@@ -34,6 +35,7 @@ public:
     {
 	DataSource *old_source = source;
 	source = new_source;
+	buffer_start_offset = 0;
 	return old_source;
     }
     
@@ -42,6 +44,7 @@ public:
     {
 	return input_buffer + input_readp;
     }
+    int GetOffset() const;
     int GetAvailable() const;
     void Advance(int count);
     void Rewind(int count);

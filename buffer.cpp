@@ -4,7 +4,8 @@
 #include <ctype.h>
 
 InputStreamBuffer::InputStreamBuffer(int size, int lookbehind)
-    : source(0), input_size(size), input_min(lookbehind), input_writep(0), input_readp(0)
+    : source(0), input_size(size), input_min(lookbehind),
+      input_writep(0), input_readp(0), buffer_start_offset(0)
 {
     input_buffer = reinterpret_cast<BYTE *>(operator new(size));
 }
@@ -29,8 +30,14 @@ void InputStreamBuffer::ShoveUp()
 		memmove(input_buffer, input_buffer + begin, bytes_kept);
 	    input_readp -= begin;
 	    input_writep -= begin;
+	    buffer_start_offset += begin;
 	}
     }
+}
+
+int InputStreamBuffer::GetOffset() const
+{
+    return buffer_start_offset + input_readp;
 }
 
 int InputStreamBuffer::Space() const
