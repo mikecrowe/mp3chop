@@ -1,5 +1,5 @@
-bin_PROGRAMS = mp3chop
-mp3chop_SOURCES=\
+bin_PROGRAMS:=mp3chop
+mp3chop_SOURCES:=\
 	header.cpp \
 	main.cpp \
 	mp3_timecode.cpp \
@@ -8,7 +8,19 @@ mp3chop_SOURCES=\
 	file_data_sink.cpp \
 	mp3_processor.cpp \
 	chop.cpp \
-	xing_frame.cpp
+	xing_frame.cpp \
+	buffer.h \
+	chop.h \
+	config.h \
+	file_data_sink.h \
+	file_data_source.h \
+	file_exception.h \
+	header.h \
+	mp3_processor.h \
+	mp3_timecode.h \
+	types.h \
+	xing_frame.h
+
 
 CXXFLAGS+=-DMP3CHOP_VERSION="\"$(VERSION)\""
 
