@@ -96,10 +96,14 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		    output->SetBookmark();
 		}
 		
+		if (m_mode == 'v')
+		    printf("Frame #%d bitrate %d\n", input_frame_number, h.Bitrate());
+		
 		if (h.SamplesPerFrame() != output_samples_per_frame)
 		{
 		    fprintf(stderr, "Warning: output_samples_per_frame mismatch.\n");
 		}
+
 		// Process frame
 		TimeCode current_time((static_cast<LONGLONG>(input_frame_number) * output_samples_per_frame * LONGLONGLITERAL(100))
 				      / static_cast<LONGLONG>(output_sample_rate));
@@ -120,8 +124,8 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		    }
 		    output_frame_number++;
 		    frame_offsets.push_back(output->GetOffset());
+
 		}
-		
 		// Now move past it.
 		input->Advance(h.FrameLength());
 		input_frame_number++;
@@ -385,6 +389,16 @@ void MP3Processor::HandleFile(const std::string &file)
 	    data_sink.OpenStandardOutput();
 
 	    AndChop chop(begin_chop.get(), end_chop.get());
+	    if (!ProcessFile(&data_source, &data_sink, &chop, scms_filter.get()))
+	    {
+		std::cerr << "Failed to process file \'" << file << "\'\n" << std::endl;
+		exit(2);
+	    }
+	}
+	else if (m_mode == 'v')
+	{
+	    printf("BOING\n");
+	    NullChop chop;
 	    if (!ProcessFile(&data_source, &data_sink, &chop, scms_filter.get()))
 	    {
 		std::cerr << "Failed to process file \'" << file << "\'\n" << std::endl;
