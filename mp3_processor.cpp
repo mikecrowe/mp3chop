@@ -401,7 +401,6 @@ void MP3Processor::HandleFile(const std::string &file)
 	}
 	else if (m_mode == 'D')
 	{
-	    printf("BOING\n");
 	    NullChop chop;
 	    if (!ProcessFile(&data_source, &data_sink, &chop, scms_filter.get()))
 	    {
