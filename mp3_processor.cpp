@@ -347,7 +347,7 @@ void MP3Processor::InvalidTimeCodeException::Report()
 
 void MP3Processor::BadFileException::Report()
 {
-    std::cerr << "Unable to open file \'" << file << "\': " << error << std::endl;
+    std::cerr << "Unable to open file \'" << m_file << "\': " << m_error << std::endl;
 }
 
 void MP3Processor::ParseTimeCode(TimeCode *tc, const std::string &t)

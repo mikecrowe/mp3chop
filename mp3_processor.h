@@ -32,13 +32,14 @@ public:
 	InvalidTimeCodeException(const std::string &tc) : offendor(tc) {}
 	virtual void Report();
     };
+    
     class BadFileException : public Exception
     {
-	const std::string file;
-	const std::string error;
+	const std::string m_file;
+	const std::string m_error;
     public:
 	BadFileException(const std::string &f, const std::string &e)
-	    : file(f), error(e) {}
+	    : file(f), m_error(e) {}
 	virtual ~BadFileException() {}
 	virtual void Report();
     };
