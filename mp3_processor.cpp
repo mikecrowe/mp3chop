@@ -13,13 +13,18 @@ int MP3Processor::ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc
 {
     fprintf(stderr, "SampleRate=%d, tc_hundredths=%d, samples_per_frame=%d\n",
 	    h->SampleRate(), tc.GetAsHundredths(), h->SamplesPerFrame());
-
+    
     return ((h->SampleRate() * tc.GetAsHundredths()) / 100)/(h->SamplesPerFrame());
 }
 
 bool MP3Processor::IsID3V1Header(const BYTE *p)
 {
     return (p[0] == 'T') && (p[1] == 'A') && (p[2] == 'G');
+}
+
+bool MP3Processor::IsID3V2Header(const BYTE *p)
+{
+    return (p[0] == 'I') && (p[1] == 'D') && (p[2] == '3');
 }
 
 void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *output, Chop *chop, Filter *filter)
@@ -63,19 +68,19 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		}
 		
 		input->EnsureAvailable(h.FrameLength());
-
+		
 		// It is, so we can be pretty sure it is an OK frame.
 		if (!found_frame)
 		{
 		    output_samples_per_frame = h.SamplesPerFrame();
-			output_sample_rate = h.SampleRate();
+		    output_sample_rate = h.SampleRate();
 		    
 		    found_frame = true;
 		}
-
+		
 		// Make sure the entire frame is available
 		input->EnsureAvailable(h.FrameLength());
-
+		
 		if (xing.Read(input->GetPointer(), input->GetPointer() + h.FrameLength()))
 		{
 		    int frames;
@@ -86,14 +91,14 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		    }
 		    output->SetBookmark();
 		}
-
+		
 		if (h.SamplesPerFrame() != output_samples_per_frame)
 		{
-			fprintf(stderr, "Warning: output_samples_per_frame mismatch.\n");
+		    fprintf(stderr, "Warning: output_samples_per_frame mismatch.\n");
 		}
 		// Process frame
 		TimeCode current_time((static_cast<long long>(input_frame_number) * output_samples_per_frame * 100LL)
-							  / static_cast<long long>(output_sample_rate));
+				      / static_cast<long long>(output_sample_rate));
 		if (chop->IsFrameRequired(input_frame_number, current_time))
 		{
 		    if (filter)
@@ -118,12 +123,18 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		input_frame_number++;
 		continue;
 	    }
+	    else if (m_keep_id3v2 && IsID3V2Header(input->GetPointer()))
+	    {
+		if (HandleID3V2Tag(input, output))
+		    continue;
+	    }
+	    
 	    // OK, if we got here then it wasn't valid sync.
 	    //BYTE b = *(input->GetPointer());
 	    //fprintf(stderr, "Lost sync on character '%c' (%d)\n", isprint(b) ? b : '.', b);
 	    
 	    input->Advance(1);
-
+	    
 	    if (found_sync)
 		fprintf(stderr, "Lost sync at offset %d\n", input->GetOffset());
 	    found_sync = false;
@@ -135,7 +146,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 	// We've run out of data - that's fine, just suck up the remaining bytes
 	while (input->GetAvailable())
 	    input->Advance(1);
-
+	
 	if (xing_fixup_required)
 	{
 	    xing.SetFrameCount(output_frame_number);
@@ -164,6 +175,63 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
     catch (FileException &e)
     {
 	std::cerr << "File error: " << e.Description() << std::endl;
+    }
+}
+
+inline int UnSyncSafeInteger(const BYTE *p)
+{
+    // If it is syncsafe then it doesn't have the top bit set
+    // in any byte.
+    if ((p[0] | p[1] | p[2] | p[3]) & 0x80)
+	throw MalformedID3V2Exception();
+
+    return (p[0] << 21) | (p[1] << 14) | (p[2] << 7) | p[3];
+}
+
+bool MP3Processor::HandleID3V2Tag(InputStreamBuffer *input, OutputStreamBuffer *output)
+{
+    try
+    {
+	// We need enough data for the entire header.
+	input->EnsureAvailable(10);
+
+	const BYTE *p = input->GetPointer();
+	
+	if (memcmp(p, "ID3", 3) != 0)
+	    throw MalformedID3V2Exception();
+
+	const BYTE version_major = p[3];
+	const BYTE version_minor = p[4];
+
+	if (version_major > 4)
+	    throw UnsupportedID3V2Version();
+
+	const BYTE flags = p[5];
+	const bool footer_present = (flags & 0x10) != 0;
+
+	unsigned total_tag_length = UnSyncSafeInteger(p + 6) + 10;
+	if (footer_present)
+	    total_tag_length += 10;
+
+	// So now we know how much we should copy from input to output
+	output->Append(p, total_tag_length);
+	input->Advance(total_tag_length);
+	
+	return true;
+    }
+    catch (InsufficientDataException &)
+    {
+	std::cerr << "Ran out of data whilst parsing ID3v2 header" << std::endl;
+	return false;
+    }
+    catch (MalformedID3V2Exception &)
+    {
+	std::cerr << "Malformed ID3v2 tag content" << std::endl;
+	return false;
+    }
+    catch (UnsupportedID3V2Version &)
+    {
+	std::cerr << "Unsupported ID3v2 version" << std::endl;
     }
 }
 

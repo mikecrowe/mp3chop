@@ -9,6 +9,14 @@
 #include "chop.h"
 #include "filter.h"
 
+class MalformedID3V2Exception
+{
+};
+
+class UnsupportedID3V2Version
+{
+};
+
 class MP3Processor
 {
 public:
@@ -43,14 +51,20 @@ private:
     int m_files;
     char m_mode;
     bool m_keep_id3v1;
+    bool m_keep_id3v2;
     
     static void ParseTimeCode(TimeCode *tc, const std::string &t);
     static int ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc);
+
     static bool IsID3V1Header(const BYTE *p);
+
+    /** Only requires three bytes */
+    static bool IsID3V2Header(const BYTE *p);
     
     bool ProcessFile(DataSource *data_source, DataSink *data_sink, Chop *chop, Filter *filter);
     void ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *output, Chop *chop, Filter *filter);
     void HandleID3V1Tag(InputStreamBuffer *input, OutputStreamBuffer *output);
+    bool HandleID3V2Tag(InputStreamBuffer *input, OutputStreamBuffer *output);
     bool GetFirstHeader(InputStreamBuffer *input, MPEGHeader *header);
     bool DumpFirstHeader(DataSource *data_source);
     void CreateSCMSFilter();
@@ -62,6 +76,7 @@ public:
     void HandleBeginTimeCode(const std::string &);
     void HandleEndTimeCode(const std::string &);
     void SetKeepID3V1(bool b = true) { m_keep_id3v1 = b; }
+    void SetKeepID3V2(bool b = true) { m_keep_id3v2 = b; }
     void HandleEnd();
     void HandleMode(char);
     void HandleForceCopyright(bool b);
