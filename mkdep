@@ -1,0 +1,13 @@
+#!/bin/sh
+#echo Scanning dependencies... 1>&2
+#PREFIX=$1
+CC=$1
+#shift
+shift
+#$CC -M -MG "$@" > .depend2
+$CC -MM -MG "$@" > .depend2
+#sed "s#\([^:]*\):#${PREFIX}\1:#" < .depend2
+cat .depend2
+sed "s#\([^:]*\):#.depend:#" < .depend2
+rm -f .depend2
+

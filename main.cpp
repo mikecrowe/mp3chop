@@ -13,75 +13,7 @@
 #include "header.h"
 #include "mp3_timecode.h"
 #include "buffer.h"
-
-class FileException
-{
-    int error_number;
-    
-public:
-    FileException() : error_number(errno) {}
-    FileException(int e) : error_number(e) {}
-    
-    const std::string Description() { return strerror(error_number); }
-    int Number() { return error_number; }
-};
-
-class FileDataSource : public DataSource
-{
-    bool opened;
-    int fd;
-    
-public:
-    FileDataSource() : opened(false), fd(-1) {}
-    ~FileDataSource() { Close(); }
-    void Open(const std::string &filename);
-    void OpenStandardInput();
-    void Close();
-    
-    virtual int ReadInto(BYTE *buffer, int bytes_required);
-};
-
-void FileDataSource::Open(const std::string &filename)
-{
-    Close();
-    fd = open(filename.c_str(), O_RDONLY);
-    if (fd < 0)
-	throw FileException();
-    opened = true;
-}
-
-void FileDataSource::OpenStandardInput()
-{
-    Close();
-    fd = 0;
-    opened = false;
-}
-
-void FileDataSource::Close()
-{
-    if (opened)
-    {
-	close(fd);
-	fd = -1;
-    }
-}
-
-int FileDataSource::ReadInto(BYTE *buffer, int bytes_required)
-{
-    int total_bytes = 0;
-    
-    // We may take more than one read to get all the data.
-    while (total_bytes < bytes_required)
-    {
-	int bytes = read(fd, buffer, bytes_required);
-	if (bytes < 0)
-	    throw FileException();
-	if (bytes == 0)
-	    break;
-	total_bytes += bytes;
-    }
-    return total_bytes;
-}
+#include "file_data_source.h"
 
 class MP3Processor
 {
@@ -94,6 +26,7 @@ public:
     {
 	const std::string offendor;
     public:
+	virtual ~InvalidTimeCodeException() {}
 	InvalidTimeCodeException(const std::string &tc) : offendor(tc) {}
 	virtual void Report();
     };
@@ -104,6 +37,7 @@ public:
     public:
 	BadFileException(const std::string &f, const std::string &e)
 	    : file(f), error(e) {}
+	virtual ~BadFileException() {}
 	virtual void Report();
     };
     
@@ -143,7 +77,7 @@ bool MP3Processor::IsID3Header(const BYTE *p)
 
 void MP3Processor::ProcessFrames(StreamBuffer *input, TimeCode start_tc, TimeCode end_tc)
 {
-    unsigned long header;
+    //unsigned long header;
     MPEGHeader h;
     
     int start_frame = -1;

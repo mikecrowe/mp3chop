@@ -1,19 +1,23 @@
-#
+MKDEP=./mkdep
+CXX=g++
+CXXFLAGS=-c -Wall -pedantic
+LD=g++
+#LDFLAGS=
 
-mp3chop : header.o main.o mp3_timecode.o buffer.o
-	g++ -o mp3chop $^
+SOURCES=header.cpp main.cpp mp3_timecode.cpp buffer.cpp file_data_source.cpp
 
-header.o : header.cpp header.h
-	g++ -c header.cpp
+OBJS1=$(SOURCES:%.cpp=%.o)
+OBJS=$(OBJS1:%.c=%.o)
+DEPS=$(OBJS:%.o=%.d)
 
-main.o : main.cpp header.h mp3_timecode.h buffer.h
-	g++ -c main.cpp
+%.d : %.cpp ; $(MKDEP) $(CXX) $(CXXFLAGS) $< > $@
 
-buffer.o : buffer.h buffer.cpp
-	g++ -c buffer.cpp
+%.o : %.cpp ; $(CXX) $(CXXFLAGS) -o $@ $<
 
-mp3_timecode.o : mp3_timecode.cpp mp3_timecode.h
-	g++ -c mp3_timecode.cpp
+mp3chop : $(OBJS)
+	$(LD) $(LDFLAGS) -o $@ $^
+
+-include $(DEPS)
 
 clean :
 	rm -f *.o mp3chop *\~

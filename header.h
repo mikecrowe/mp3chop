@@ -55,6 +55,8 @@ public:
 	    return "MPEG Version 2";
 	case 3:
 	    return "MPEG Version 1";
+	default:
+	    return "Unknown version";
 	}
     }
     
@@ -75,6 +77,8 @@ public:
 	    return 2;
 	case 3:
 	    return 1;
+	default:
+	    return -1;
 	}
     }
     
@@ -144,6 +148,8 @@ public:
 	    return "dual channel";
 	case 3:
 	    return "mono";
+	default:
+	    return "Unknown channel mode";
 	}
     }
     
@@ -174,6 +180,8 @@ public:
 	    return "reserved";
 	case 3:
 	    return "CCIT J.17";
+	default:
+	    return "Unknown emphasis";
 	}
     }
     
