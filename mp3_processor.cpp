@@ -174,6 +174,55 @@ void MP3Processor::HandleID3Tag(InputStreamBuffer *input, OutputStreamBuffer *ou
     }
 }
 
+bool MP3Processor::GetFirstHeader(InputStreamBuffer *input, MPEGHeader *header)
+{
+    try
+    {
+	while (true)
+	{
+	    input->EnsureAvailable(4);
+	    if (header->Read(input->GetPointer()))
+	    {
+		// This is sync, but is the next frame?
+		input->EnsureAvailable(header->FrameLength() + 4);				
+		
+		MPEGHeader h2;
+		if (h2.Read(input->GetPointer() + header->FrameLength()))
+		{
+		    return true;
+		}
+	    }
+	    // Nope - we haven't found sync.
+	    input->Advance(1);
+	}
+    }
+    catch (InsufficientDataException &)
+    {
+	std::cerr << "Run out of data." << std::endl;
+    }
+    return false;
+}
+
+bool MP3Processor::DumpFirstHeader(DataSource *data_source)
+{
+    try
+    {
+	MPEGHeader header;
+
+	InputStreamBuffer input(131072, 128);	
+	input.SetSource(data_source);
+	if (GetFirstHeader(&input, &header))
+	{
+	    header.Dump();
+	    return true;
+	}
+    }
+    catch (FileException &e)
+    {
+	std::cerr << "File error: " << e.Description() << std::endl;
+    }
+    return false;
+}
 
 
 bool MP3Processor::ProcessFile(DataSource *data_source, DataSink *data_sink, Chop *chop)
@@ -243,13 +292,24 @@ void MP3Processor::HandleFile(const std::string &file)
 	else
 	    data_source.Open(file);
 
-	data_sink.OpenStandardOutput();
-	
-	AndChop chop(begin_chop.get(), end_chop.get());
-	if (!ProcessFile(&data_source, &data_sink, &chop))
+	if (m_mode == 'c')
 	{
-	    fprintf(stderr, "Failed to process file \'%s\'\n", optarg);
-	    exit(2);
+	    data_sink.OpenStandardOutput();
+
+	    AndChop chop(begin_chop.get(), end_chop.get());
+	    if (!ProcessFile(&data_source, &data_sink, &chop))
+	    {
+		std::cerr << "Failed to process file \'" << file << "\'\n" << std::endl;
+		exit(2);
+	    }
+	}
+	else if (m_mode == 'd')
+	{
+	    if (!DumpFirstHeader(&data_source))
+	    {
+		std::cerr << "Failed to process file \'" << file << "\'\n" << std::endl;
+		exit(2);
+	    }
 	}
 	++files;
     }
@@ -263,6 +323,11 @@ void MP3Processor::HandleEnd()
 {
     if (!files)
 	HandleFile("-");
+}
+
+void MP3Processor::HandleMode(char mode)
+{
+    m_mode = mode;
 }
 
 void MP3Processor::HandleBeginTimeCode(const std::string &tc_str)
