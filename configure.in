@@ -5,7 +5,7 @@ dnl It also seems that autoconf isn't geared up to look for C++
 dnl specific headers so we just assume they are there.
 
 AC_INIT(main.cpp)
-AM_INIT_AUTOMAKE(mp3chop, 0.01)
+AM_INIT_AUTOMAKE(mp3chop, 0.02)
 AM_CONFIG_HEADER(config.h)
 AC_CANONICAL_HOST
 
