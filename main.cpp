@@ -33,6 +33,8 @@ void Help()
 	    "   --end=<time>, -e <time>    Do not output anything after <time>\n"
 	    "   --help, -h                 Display this help\n"
 	    "   --dump-header, -d          Dump the header of the first valid frame\n"
+	    "   --copyright=0|1, -c 0|1    Force copyright flag\n"
+	    "   --original=0|1, -o 0|1     Force original flag\n"
 	    "\n"
 	    "   <time> is of the form 'mm:ss:hh' mm=minutes, ss=seconds, hh=hundredths\n"
 	    "\n");
@@ -44,13 +46,15 @@ int main(int ac, char *av[])
     {
 	{ "begin", 1, NULL, 'b' },
 	{ "end", 1, NULL, 'e' },
+	{ "copyright", 1, NULL, 'c' },
+	{ "original", 1, NULL, 'o' },
 	{ "id3", 0, NULL, 'i' },
 	{ "help", 0, NULL, 'h' },
 	{ "dump-header", 0, NULL, 'd' },
 	{ 0, 0, 0, 0 }
     };
     
-    const char *short_options = "-b:e:ihd";
+    const char *short_options = "-b:e:c:o:ihd";
     
     MP3Processor processor;
     
@@ -68,7 +72,6 @@ int main(int ac, char *av[])
 #error Need getopt or getopt_long to work
 #endif
 #endif
-	    
 	    switch (option)
 	    {
 	    case 1:
@@ -79,6 +82,12 @@ int main(int ac, char *av[])
 		break;
 	    case 'e':
 		processor.HandleEndTimeCode(optarg);
+		break;
+	    case 'c':
+		processor.HandleForceCopyright(atoi(optarg));
+		break;
+	    case 'o':
+		processor.HandleForceOriginal(atoi(optarg));
 		break;
 	    case 'i':
 		processor.SetKeepID3(true);
