@@ -213,6 +213,8 @@ bool MP3Processor::HandleID3V2Tag(InputStreamBuffer *input, OutputStreamBuffer *
 	if (footer_present)
 	    total_tag_length += 10;
 
+	std::cerr << "ID3v2 header length: " << total_tag_length << std::endl;
+	
 	// So now we know how much we should copy from input to output
 	output->Append(p, total_tag_length);
 	input->Advance(total_tag_length);
