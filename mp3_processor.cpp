@@ -96,8 +96,12 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		    output->SetBookmark();
 		}
 		
-		if (m_mode == 'v')
-		    printf("Frame #%d bitrate %d\n", input_frame_number, h.Bitrate());
+		if (m_mode == 'D')
+		{
+		    printf("Frame #%d\n", input_frame_number);
+		    h.Dump();
+		    printf("\n");
+		}
 		
 		if (h.SamplesPerFrame() != output_samples_per_frame)
 		{
@@ -395,7 +399,7 @@ void MP3Processor::HandleFile(const std::string &file)
 		exit(2);
 	    }
 	}
-	else if (m_mode == 'v')
+	else if (m_mode == 'D')
 	{
 	    printf("BOING\n");
 	    NullChop chop;

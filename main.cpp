@@ -34,6 +34,7 @@ void Help()
 	    "   --end=<time>, -e <time>    Do not output anything after <time>\n"
 	    "   --help, -h                 Display this help\n"
 	    "   --dump-header, -d          Dump the header of the first valid frame\n"
+	    "   --dump-all -D              Dump the headers of every frame\n"
 	    "   --copyright=0|1, -c 0|1    Force copyright flag\n"
 	    "   --original=0|1, -o 0|1     Force original flag\n"
 	    "\n"
@@ -53,12 +54,13 @@ int main(int ac, char *av[])
 	{ "strip-id3", 1, NULL, 's' },
 	{ "help", 0, NULL, 'h' },
 	{ "dump-header", 0, NULL, 'd' },
+	{ "dump-all", 0, NULL, 'D' },
 	{ 0, 0, 0, 0 }
     };
 #endif // HAVE_GETOPT_LONG
 
 #ifdef HAVE_GETOPT
-    const char *short_options = "-b:e:c:o:s:hd";
+    const char *short_options = "-b:e:c:o:s:hdv";
 #endif // HAVE_GETOPT
     
     MP3Processor processor;
@@ -117,6 +119,10 @@ int main(int ac, char *av[])
 
 	    case 'd':
 		processor.HandleMode('d');
+		break;
+
+	    case 'D':
+		processor.HandleMode('D');
 		break;
 		
 	    case '?':
