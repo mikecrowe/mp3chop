@@ -7,6 +7,8 @@
 #include "file_data_sink.h"
 #include "xing_frame.h"
 
+const int MAX_FRAME_LENGTH = 4096;
+
 int MP3Processor::ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc)
 {
     fprintf(stderr, "SampleRate=%d, tc_hundredths=%d, samples_per_frame=%d\n",
@@ -20,7 +22,7 @@ bool MP3Processor::IsID3Header(const BYTE *p)
     return (p[0] == 'T') && (p[1] == 'A') && (p[2] == 'G');
 }
 
-void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *output, Chop *chop)
+void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *output, Chop *chop, Filter *filter)
 {
     //unsigned long header;
     MPEGHeader h;
@@ -94,7 +96,19 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 							  / static_cast<long long>(output_sample_rate));
 		if (chop->IsFrameRequired(input_frame_number, current_time))
 		{
-		    output->Append(input->GetPointer(), h.FrameLength());
+		    if (filter)
+		    {
+			BYTE b[MAX_FRAME_LENGTH];
+			unsigned l = h.FrameLength();
+			memcpy(b, input->GetPointer(), h.FrameLength());
+			filter->Apply(&h, b, h.FrameLength());
+			h.Write(b);
+			output->Append(b, h.FrameLength());
+		    }
+		    else
+		    {
+			output->Append(input->GetPointer(), h.FrameLength());
+		    }
 		    output_frame_number++;
 		    frame_offsets.push_back(output->GetOffset());
 		}
@@ -225,7 +239,7 @@ bool MP3Processor::DumpFirstHeader(DataSource *data_source)
 }
 
 
-bool MP3Processor::ProcessFile(DataSource *data_source, DataSink *data_sink, Chop *chop)
+bool MP3Processor::ProcessFile(DataSource *data_source, DataSink *data_sink, Chop *chop, Filter *filter)
 {
 #if 0
     fprintf(stderr, " Start time: %d:%02d:%02d.%02d\n",
@@ -243,7 +257,7 @@ bool MP3Processor::ProcessFile(DataSource *data_source, DataSink *data_sink, Cho
 	OutputStreamBuffer output;
 	output.SetSink(data_sink);
 	
-	ProcessFrames(&input, &output, chop);
+	ProcessFrames(&input, &output, chop, filter);
 	if (keep_id3)
 	    HandleID3Tag(&input, &output);
 	
@@ -297,7 +311,7 @@ void MP3Processor::HandleFile(const std::string &file)
 	    data_sink.OpenStandardOutput();
 
 	    AndChop chop(begin_chop.get(), end_chop.get());
-	    if (!ProcessFile(&data_source, &data_sink, &chop))
+	    if (!ProcessFile(&data_source, &data_sink, &chop, scms_filter.get()))
 	    {
 		std::cerr << "Failed to process file \'" << file << "\'\n" << std::endl;
 		exit(2);
@@ -346,3 +360,25 @@ void MP3Processor::HandleEndTimeCode(const std::string &tc_str)
     end_chop = p;
 }
 
+void MP3Processor::CreateSCMSFilter()
+{
+    if (scms_filter.get() == NULL)
+    {
+	std::auto_ptr<SCMSFilter> p(new SCMSFilter);
+	scms_filter = p;
+    }
+}
+
+void MP3Processor::HandleForceCopyright(bool b)
+{
+    CreateSCMSFilter();
+    scms_filter->SetCopyright(b);
+    fprintf(stderr, "bing\n");
+}
+
+void MP3Processor::HandleForceOriginal(bool b)
+{
+    CreateSCMSFilter();
+    scms_filter->SetOriginal(b);
+    fprintf(stderr, "bong\n");
+}
