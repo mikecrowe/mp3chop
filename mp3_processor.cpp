@@ -57,10 +57,11 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 			continue;
 		    }
 		    found_sync = true;
+		    fprintf(stderr, "Found sync at offset %d\n", input->GetOffset());
 		}
 		
 		input->EnsureAvailable(h.FrameLength());
-		
+
 		// It is, so we can be pretty sure it is an OK frame.
 		if (!found_frame)
 		{
@@ -108,6 +109,9 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 	    //fprintf(stderr, "Lost sync on character '%c' (%d)\n", isprint(b) ? b : '.', b);
 	    
 	    input->Advance(1);
+
+	    if (found_sync)
+		fprintf(stderr, "Lost sync at offset %d\n", input->GetOffset());
 	    found_sync = false;
 	}
     }
