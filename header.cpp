@@ -59,19 +59,19 @@ void MPEGHeader::Dump()
 {
     if (!Valid())
 	printf("NOT VALID!!!!\n");
-    printf("Word: %08x\n", word);
-    printf("Sync: %d\n", IsSync());
-    printf("CRC protected: %d\n", Protected());
-    printf("Version: %s\n", VersionString());
-    printf("Layer: %d\n", LayerNumber());
-    printf("Bitrate: %d\n", Bitrate());
-    printf("Samplerate: %d\n", SampleRate());
-    printf("Padded: %d\n", Padded());
-    printf("Private: %d\n", Private());
-    printf("Channel mode: %s\n", ChannelModeName());
-    printf("Copyright: %d\n", Copyright());
-    printf("Original: %d\n", Original());
-    printf("Emphasis: %s\n", EmphasisName());
-    printf("Frame length: %d\n", FrameLength());
-    printf("Data length: %d\n", DataLength());
+    fprintf(stderr, "  Word: %08x\n", word);
+    fprintf(stderr, "  Sync: %d\n", IsSync());
+    fprintf(stderr, "  CRC protected: %d\n", Protected());
+    fprintf(stderr, "  Version: %s\n", VersionString());
+    fprintf(stderr, "  Layer: %d\n", LayerNumber());
+    fprintf(stderr, "  Bitrate: %d\n", Bitrate());
+    fprintf(stderr, "  Samplerate: %d\n", SampleRate());
+    fprintf(stderr, "  Padded: %d\n", Padded());
+    fprintf(stderr, "  Private: %d\n", Private());
+    fprintf(stderr, "  Channel mode: %s\n", ChannelModeName());
+    fprintf(stderr, "  Copyright: %d\n", Copyright());
+    fprintf(stderr, "  Original: %d\n", Original());
+    fprintf(stderr, "  Emphasis: %s\n", EmphasisName());
+    fprintf(stderr, "  Frame length: %d\n", FrameLength());
+    fprintf(stderr, "  Data length: %d\n", DataLength());
 }
