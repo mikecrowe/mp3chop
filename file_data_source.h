@@ -1,21 +1,8 @@
 #ifndef FILE_DATA_SOURCE_H
 #define FILE_DATA_SOURCE_H 1
 
-#include <string>
-#include <errno.h>
+#include "file_exception.h"
 #include "buffer.h"
-
-class FileException
-{
-    int error_number;
-    
-public:
-    FileException() : error_number(errno) {}
-    FileException(int e) : error_number(e) {}
-    
-    const std::string Description() { return strerror(error_number); }
-    int Number() { return error_number; }
-};
 
 class FileDataSource : public DataSource
 {

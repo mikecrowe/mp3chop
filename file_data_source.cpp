@@ -33,8 +33,8 @@ void FileDataSource::Close()
     if (opened)
     {
 	close(fd);
-	fd = -1;
     }
+    fd = -1;
 }
 
 int FileDataSource::ReadInto(BYTE *buffer, int bytes_required)

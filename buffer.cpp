@@ -3,18 +3,18 @@
 #include <stdio.h>
 #include <ctype.h>
 
-StreamBuffer::StreamBuffer(int size, int lookbehind)
+InputStreamBuffer::InputStreamBuffer(int size, int lookbehind)
     : source(0), input_size(size), input_min(lookbehind), input_writep(0), input_readp(0)
 {
     input_buffer = reinterpret_cast<BYTE *>(operator new(size));
 }
 
-StreamBuffer::~StreamBuffer()
+InputStreamBuffer::~InputStreamBuffer()
 {
     delete input_buffer;
 }
 
-void StreamBuffer::ShoveUp()
+void InputStreamBuffer::ShoveUp()
 {
     // if it's worth doing push everything up to the start of the
     // buffer + minimum input value leaving space at the end for new
@@ -33,17 +33,17 @@ void StreamBuffer::ShoveUp()
     }
 }
 
-int StreamBuffer::Space() const
+int InputStreamBuffer::Space() const
 {
     return input_size - input_writep;
 }
 
-int StreamBuffer::GetAvailable() const
+int InputStreamBuffer::GetAvailable() const
 {
     return input_writep - input_readp;
 }
 
-void StreamBuffer::EnsureAvailable(int count)
+void InputStreamBuffer::EnsureAvailable(int count)
 {
     if (GetAvailable() < count)
     {
@@ -56,12 +56,12 @@ void StreamBuffer::EnsureAvailable(int count)
     }
 }
 
-void StreamBuffer::Advance(int count)
+void InputStreamBuffer::Advance(int count)
 {
     input_readp += count;
 }						
 
-void StreamBuffer::Rewind(int count)
+void InputStreamBuffer::Rewind(int count)
 {
     if (input_readp >= count)
 	input_readp -= count;
@@ -71,7 +71,7 @@ void StreamBuffer::Rewind(int count)
 
 // Keep reading data until either we have _more_ than count or we find
 // EOF.
-bool StreamBuffer::IsEOFAt(int count)
+bool InputStreamBuffer::IsEOFAt(int count)
 {
     while (GetAvailable() < count)
     {
@@ -98,4 +98,67 @@ bool StreamBuffer::IsEOFAt(int count)
     }
     return false;
 }
-	
+
+OutputStreamBuffer::OutputStreamBuffer()
+    : sink(NULL),
+      bookmark_active(false),
+      append_mode(true),
+      offset(0)
+{
+}
+
+OutputStreamBuffer::~OutputStreamBuffer()
+{
+}
+
+void OutputStreamBuffer::Flush()
+{
+    if (!bookmark_active)
+    {
+	int n = sink->WriteOut(output_buffer.data(), output_buffer.length());
+	output_buffer.erase(0, n);
+    }
+}
+
+void OutputStreamBuffer::Append(const BYTE *begin, int length)
+{
+    if (append_mode)
+    {
+	output_buffer.append(begin, length);
+	if (output_buffer.size() > 8192)
+	    Flush();
+
+	offset += length;
+    }
+    else
+    {
+	// If we're not in append mode then just write it out
+	// directly and then throw enough away from the string to
+	// cover it.
+	const BYTE *end = begin + length;
+	while (begin < end)
+	{
+	    int n = sink->WriteOut(begin, length);
+	    output_buffer.erase(0, n);
+	    begin += n;
+	}
+    }
+}
+
+void OutputStreamBuffer::SetBookmark()
+{
+    Flush();
+    bookmark_active = true;
+}
+
+void OutputStreamBuffer::ClearBookmark()
+{
+    bookmark_active = false;
+    append_mode = false;
+    Flush();
+}
+
+void OutputStreamBuffer::GoToBookmark()
+{
+    append_mode = false;
+}

@@ -2,7 +2,10 @@
 #include <cstdio>
 #include <climits>
 #include <unistd.h>
+#include <vector>
 #include "file_data_source.h"
+#include "file_data_sink.h"
+#include "xing_frame.h"
 
 int MP3Processor::ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc)
 {
@@ -17,7 +20,7 @@ bool MP3Processor::IsID3Header(const BYTE *p)
     return (p[0] == 'T') && (p[1] == 'A') && (p[2] == 'G');
 }
 
-void MP3Processor::ProcessFrames(StreamBuffer *input, Chop *chop)
+void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *output, Chop *chop)
 {
     //unsigned long header;
     MPEGHeader h;
@@ -25,10 +28,14 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, Chop *chop)
     //    int start_frame = -1;
     //    int end_frame = -1;
     bool found_frame = false;
-    int frame_number = 0;
+    int input_frame_number = 0;
+    int output_frame_number = 0;
     bool found_sync = 0;
-	int output_samples_per_frame = 0;
-	int output_sample_rate = 0;
+    int output_samples_per_frame = 0;
+    int output_sample_rate = 0;
+    bool xing_fixup_required = false;
+    XingFrame xing;
+    std::vector<int> frame_offsets;
     
     try
     {
@@ -63,37 +70,57 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, Chop *chop)
 		    found_frame = true;
 		}
 
+		// Make sure the entire frame is available
+		input->EnsureAvailable(h.FrameLength());
+
+		if (xing.Read(input->GetPointer(), input->GetPointer() + h.FrameLength()))
+		{
+		    int frames, bytes;
+		    if (xing.GetFrameCount(&frames))
+		    {
+			if (!frames)
+			    xing_fixup_required = true;
+		    }
+#if 0
+		    if (xing.GetByteCount(&bytes))
+			fprintf(stderr, "It has %d bytes\n", bytes);
+#endif
+		    output->SetBookmark();
+		}
+
 		if (h.SamplesPerFrame() != output_samples_per_frame)
 		{
 			fprintf(stderr, "Warning: output_samples_per_frame mismatch.\n");
 		}
 		// Process frame
 #if 0
-		if (frame_number >= start_frame && frame_number < end_frame)
+		if (input_frame_number >= start_frame && frame_number < end_frame)
 		{
 		    //fprintf(stderr, "Outputting frame %d (length=%d)\n", frame_number, h.FrameLength());
-		    std::write(1, input->GetPointer(), h.FrameLength());
+//		    std::write(1, input->GetPointer(), h.FrameLength());
 		}
 #endif
-		TimeCode current_time((static_cast<long long>(frame_number) * output_samples_per_frame * 100LL)
+		TimeCode current_time((static_cast<long long>(input_frame_number) * output_samples_per_frame * 100LL)
 							  / static_cast<long long>(output_sample_rate));
-		if (chop->IsFrameRequired(frame_number, current_time))
+		if (chop->IsFrameRequired(input_frame_number, current_time))
 		{
-		    std::write(1, input->GetPointer(), h.FrameLength());
+		    output->Append(input->GetPointer(), h.FrameLength());
+		    output_frame_number++;
+		    frame_offsets.push_back(output->GetOffset());
 		}
 #if 0
 		else
-		    fprintf(stderr, "Skipping frame %d\n", frame_number);
+		    fprintf(stderr, "Skipping frame %d\n", input_frame_number);
 #endif
 		
-				// Now move past it.
+		// Now move past it.
 		input->Advance(h.FrameLength());
-		frame_number++;
+		input_frame_number++;
 		continue;
 	    }
 	    // OK, if we got here then it wasn't valid sync.
-	    BYTE b = *(input->GetPointer());
-	    fprintf(stderr, "Lost sync on character '%c' (%d)\n", isprint(b) ? b : '.', b);
+	    //BYTE b = *(input->GetPointer());
+	    //fprintf(stderr, "Lost sync on character '%c' (%d)\n", isprint(b) ? b : '.', b);
 	    
 	    input->Advance(1);
 	    found_sync = false;
@@ -101,10 +128,35 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, Chop *chop)
     }
     catch (InsufficientDataException &)
     {
-      fprintf(stderr, "End of file found at %d frames.\n", frame_number);
+	fprintf(stderr, "End of file found at %d frames.\n", input_frame_number);
 	// We've run out of data - that's fine, just suck up the remaining bytes
 	while (input->GetAvailable())
 	    input->Advance(1);
+
+	if (xing_fixup_required)
+	{
+	    xing.SetFrameCount(output_frame_number);
+
+	    int file_length = output->GetOffset();
+	    double bit = frame_offsets.size()/100;
+	    for(int i = 0; i < 100; ++i)
+	    {
+		int frame = i * bit;
+		int offset = frame_offsets[frame];
+		double fraction = (double)offset/(double)file_length;
+		BYTE toc_entry = fraction * 256;
+		xing.SetTocEntry(i, toc_entry);
+	    }
+	    output->GoToBookmark();
+
+	    BYTE *xing_frame;
+	    int xing_frame_length;
+	    if (xing.GetFrameContent(&xing_frame, &xing_frame_length))
+	    {
+		output->Append(xing_frame, xing_frame_length);
+	    }
+	}
+	output->ClearBookmark();
     }
     catch (FileException &e)
     {
@@ -112,7 +164,7 @@ void MP3Processor::ProcessFrames(StreamBuffer *input, Chop *chop)
     }
 }
 
-void MP3Processor::HandleID3Tag(StreamBuffer *input)
+void MP3Processor::HandleID3Tag(InputStreamBuffer *input, OutputStreamBuffer *output)
 {
     try
     {
@@ -124,7 +176,7 @@ void MP3Processor::HandleID3Tag(StreamBuffer *input)
 	{
 	    fprintf(stderr, "Found an ID3 tag.\n");
 	    // We've got an ID3 header. Just output the block.
-	    write(1, input->GetPointer(), 128);
+	    output->Append(input->GetPointer(), 128);
 	}
     }
     catch(InsufficientDataException &)
@@ -135,7 +187,7 @@ void MP3Processor::HandleID3Tag(StreamBuffer *input)
 
 
 
-bool MP3Processor::ProcessFile(DataSource *ds, Chop *chop)
+bool MP3Processor::ProcessFile(DataSource *data_source, DataSink *data_sink, Chop *chop)
 {
 #if 0
     fprintf(stderr, " Start time: %d:%02d:%02d.%02d\n",
@@ -148,12 +200,14 @@ bool MP3Processor::ProcessFile(DataSource *ds, Chop *chop)
 #endif
     try
     {
-	StreamBuffer input(131072, 128);	
-	input.SetSource(ds);
+	InputStreamBuffer input(131072, 128);	
+	input.SetSource(data_source);
+	OutputStreamBuffer output;
+	output.SetSink(data_sink);
 	
-	ProcessFrames(&input, chop);
+	ProcessFrames(&input, &output, chop);
 	if (keep_id3)
-	    HandleID3Tag(&input);
+	    HandleID3Tag(&input, &output);
 	
 	return true;
     }
@@ -192,20 +246,23 @@ void MP3Processor::HandleFile(const std::string &file)
 {
     try
     {
-		FileDataSource ds;
-		
-		if (file == "-")
-			ds.OpenStandardInput();
-		else
-			ds.Open(file);
-		
-		AndChop chop(begin_chop.get(), end_chop.get());
-		if (!ProcessFile(&ds, &chop))
-		{
-			fprintf(stderr, "Failed to process file \'%s\'\n", optarg);
-			exit(2);
-		}
-		++files;
+	FileDataSource data_source;
+	FileDataSink data_sink;
+	
+	if (file == "-")
+	    data_source.OpenStandardInput();
+	else
+	    data_source.Open(file);
+
+	data_sink.OpenStandardOutput();
+	
+	AndChop chop(begin_chop.get(), end_chop.get());
+	if (!ProcessFile(&data_source, &data_sink, &chop))
+	{
+	    fprintf(stderr, "Failed to process file \'%s\'\n", optarg);
+	    exit(2);
+	}
+	++files;
     }
     catch (FileException &e)
     {

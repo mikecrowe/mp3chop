@@ -2,6 +2,7 @@
 #define BUFFER_H 1
 
 #include "types.h"
+#include <string>
 
 class InsufficientDataException
 {
@@ -13,7 +14,7 @@ public:
     virtual int ReadInto(BYTE *buffer, int bytes_required) = 0;
 };
 
-class StreamBuffer
+class InputStreamBuffer
 {
     DataSource *source;
     BYTE *input_buffer;
@@ -27,8 +28,8 @@ protected:
     int Space() const;
     
 public:
-    StreamBuffer(int size, int lookbehind);
-    ~StreamBuffer();
+    InputStreamBuffer(int size, int lookbehind);
+    ~InputStreamBuffer();
     DataSource *SetSource(DataSource *new_source)
     {
 	DataSource *old_source = source;
@@ -47,5 +48,47 @@ public:
     
     bool IsEOFAt(int count);
 };
+
+class DataSink
+{
+public:
+    virtual int WriteOut(const BYTE *buffer, int bytes_available) = 0;
+};
+
+class OutputStreamBuffer
+{
+    DataSink *sink;
+    std::basic_string<BYTE> output_buffer;
+    bool bookmark_active;
+    bool append_mode;
+    int offset;
+    
+protected:
+    void Output();
+    
+public:
+    OutputStreamBuffer();
+    ~OutputStreamBuffer();
+    DataSink *SetSink(DataSink *new_sink)
+    {
+	DataSink *old_sink = sink;
+	sink = new_sink;
+	return old_sink;
+    }
+
+    void SetBookmark();
+    void ClearBookmark();
+    void GoToBookmark();
+    
+    void Append(const BYTE *start, int length);
+
+    void Flush();
+
+    int GetOffset() const
+    {
+	return offset;
+    }
+};
+
 
 #endif
