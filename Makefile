@@ -9,7 +9,7 @@ header.o : header.cpp header.h
 main.o : main.cpp header.h mp3_timecode.h buffer.h
 	g++ -c main.cpp
 
-buffer.o : buffer.h
+buffer.o : buffer.h buffer.cpp
 	g++ -c buffer.cpp
 
 mp3_timecode.o : mp3_timecode.cpp mp3_timecode.h
