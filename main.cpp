@@ -20,15 +20,16 @@ void Help()
 {
     fprintf(stderr,
 	    "mp3chop: A program for chopping out bits of mp3 files.\n"
-	    "(C) 1999-2000 Mike Crowe, <mac@fysh.org>\n"
-	    "Version " MP3CHOP_VERSION "\n"
+	    "(C) 1999-2003 Mike Crowe, <mac@fysh.org>\n"
+	    "Version " VERSION "\n"
 	    "\n"
 	    "mp3chop is distributed with ABSOLUTELY NO WARRANTY under the terms\n"
 	    "of the GNU General Public License Version 2.\n"
 	    "\n"
 	    "Usage: mp3chop [options] < infile > outfile\n"
 	    "\n"
-	    "   --id3, -i                  Preserve id3 version 1 tags\n"
+	    "   --strip-id3=1, -s 1        String ID3 version 1 tags\n"
+	    "   --strip-id3=2, -s 2        String ID3 version 2 tags\n"
 	    "   --begin=<time>, -b <time>  Do not output anything before <time>\n"
 	    "   --end=<time>, -e <time>    Do not output anything after <time>\n"
 	    "   --help, -h                 Display this help\n"
@@ -48,15 +49,17 @@ int main(int ac, char *av[])
 	{ "end", 1, NULL, 'e' },
 	{ "copyright", 1, NULL, 'c' },
 	{ "original", 1, NULL, 'o' },
-	{ "id3", 0, NULL, 'i' },
+	{ "strip-id3", 1, NULL, 's' },
 	{ "help", 0, NULL, 'h' },
 	{ "dump-header", 0, NULL, 'd' },
 	{ 0, 0, 0, 0 }
     };
     
-    const char *short_options = "-b:e:c:o:ihd";
+    const char *short_options = "-b:e:c:o:s:hd";
     
     MP3Processor processor;
+    processor.SetKeepID3V1(true);
+    processor.SetKeepID3V2(true);
     
     try
     {
@@ -89,9 +92,21 @@ int main(int ac, char *av[])
 	    case 'o':
 		processor.HandleForceOriginal(atoi(optarg));
 		break;
-	    case 'i':
-		processor.SetKeepID3V1(true);
+	    case 's':
+		if (strcmp(optarg, "1") == 0)
+		{
+		    processor.SetKeepID3V1(false);
+		}
+		else if (strcmp(optarg, "2") == 0)
+		{
+		    processor.SetKeepID3V2(false);
+		}
+		else
+		{
+		    std::cerr << "Unknown strip specification." << std::endl;
+		}
 		break;
+	    case '1':
 	    case 'h':
 		Help();
 		return 0;
