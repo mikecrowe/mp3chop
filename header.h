@@ -1,6 +1,7 @@
 #ifndef HEADER_H
 #define HEADER_H
 
+#include "trace.h"
 #include "types.h"
 
 class MPEGHeader
@@ -30,7 +31,7 @@ public:
 	    b[1] = *p++;
 	    crc = (b[0] << 8) | b[1];
 	}
-	return IsSync();
+	return IsSync() && Valid();
     }
     
     bool IsSync() const
@@ -78,15 +79,19 @@ public:
 	case 3:
 	    return 1;
 	default:
+	    ASSERT(false);
 	    return -1;
 	}
     }
     
     bool Valid() const
     {
-	return (BitrateCode() != 0xf)
+	const int bitrate_code = BitrateCode();
+	return (bitrate_code != 0xf)
+	    && (bitrate_code != 0x0)
 	    && (SampleRateCode() != 0x3)
-	    && (VersionCode() != 1);
+	    && (VersionCode() != 1)
+	    && (LayerCode() != 0);
     }
     bool Protected() const
     {
@@ -104,8 +109,16 @@ public:
 	const int version_index = (version_code == 3) ? 0 : 1;
 	const int layer_index = LayerNumber() - 1;
 	const int bitrate_index = BitrateCode();
-	
-	return static_cast<int>(bitrate_table[version_index][layer_index][bitrate_index]) * 1000;
+
+	ASSERT(version_index >= 0);
+	ASSERT(version_index <= 1);
+	ASSERT(layer_index >= 0);
+	ASSERT(layer_index < 3);
+	ASSERT(bitrate_index > 0);
+	ASSERT(bitrate_index < 15);
+	const int result = static_cast<int>(bitrate_table[version_index][layer_index][bitrate_index]) * 1000;
+	ASSERT(result > 0);
+	return result;
     }
     
     int SampleRateCode() const
@@ -117,8 +130,15 @@ public:
     {
 	const int version_code = VersionCode();
 	const int samplerate_code = SampleRateCode();
+
+	ASSERT(version_code >= 0);
+	ASSERT(version_code < 4);
+	ASSERT(samplerate_code >= 0);
+	ASSERT(samplerate_code < 4);
 	
-	return samplerate_table[version_code][samplerate_code];
+	const int result = samplerate_table[version_code][samplerate_code];
+	ASSERT(result > 0);
+	return result;
     }
     
     bool Padded() const
@@ -192,14 +212,25 @@ public:
     
     int FrameLength() const
     {
+	int result;
 	if (LayerNumber() == 1)
 	{
-	    return (12 * Bitrate() / SampleRate() + (Padded() ? 1: 0)) * 4;
+	    // MPEG 1, 2 and 2.5 layer 1
+	    result = (12 * Bitrate() / SampleRate() + (Padded() ? 1: 0)) * 4;
+	}
+	else if (VersionCode() == 3)
+	{
+	    // MPEG 1 layers 2 & 3
+	    result = 144 * Bitrate() / SampleRate() + Padded();
 	}
 	else
 	{
-	    return 144 * Bitrate() / SampleRate() + Padded();
+	    // MPEG 2 & 2.5 layers 2 & 3
+	    // This is a bit of a dubious fix but it makes certain files work!
+	    result = 72 * Bitrate() / SampleRate() + Padded();
 	}
+	ASSERT(result > 0);
+	return result;
     }
     
     int DataLength() const
@@ -213,9 +244,14 @@ public:
 	{
 	    return 384;
 	}
-	else
+	else if (VersionCode() == 3)
 	{
 	    return 1152;
+	}
+	else
+	{
+	    // See FrameLength() above.
+	    return 1152/2;
 	}
     }
     
