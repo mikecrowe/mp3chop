@@ -10,7 +10,7 @@ dnl in config_win32.h.
 include(acinclude.m4)
 
 AC_INIT(main.cpp)
-AM_INIT_AUTOMAKE(mp3chop, 1.04)
+AM_INIT_AUTOMAKE(mp3chop, 1.05)
 AM_CONFIG_HEADER(config.h)
 AC_CANONICAL_HOST
 
