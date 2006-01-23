@@ -26,6 +26,9 @@ mp3chop_SOURCES:=\
 	trace.h \
 	xing_frame.h
 
+# We don't want to distribute types2.h
+CONFIG_CLEAN_FILES:=\
+	$(srcdir)/types2.h
 
 MAINTAINERCLEANFILES:=\
 	$(srcdir)/Makefile.in \
@@ -38,4 +41,6 @@ MAINTAINERCLEANFILES:=\
 	$(srcdir)/mkinstalldirs \
 	$(srcdir)/missing \
 	$(srcdir)/aclocal.m4
+
+
 

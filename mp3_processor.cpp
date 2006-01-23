@@ -33,7 +33,6 @@ bool MP3Processor::IsID3V2Header(const BYTE *p)
 
 void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *output, Chop *chop, Filter *filter)
 {
-    //unsigned long header;
     MPEGHeader h;
     
     //    int start_frame = -1;
@@ -109,8 +108,8 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		}
 
 		// Process frame
-		TimeCode current_time((static_cast<LONGLONG>(input_frame_number) * output_samples_per_frame * LONGLONGLITERAL(100))
-				      / static_cast<LONGLONG>(output_sample_rate));
+		TimeCode current_time((static_cast<UINT64>(input_frame_number) * output_samples_per_frame * UINT64LITERAL(100))
+				      / static_cast<UINT64>(output_sample_rate));
 		if (chop->IsFrameRequired(input_frame_number, current_time))
 		{
 		    if (filter)

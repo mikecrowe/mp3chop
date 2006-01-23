@@ -42,3 +42,12 @@
 	supported.
 
 	* Released as v1.04
+
+2006-01-23  Mike Crowe <mac@fysh.org>
+
+	* Incorporate a few clever autoconf macros from the
+	autoconf-archive so that we can use <stdint.h> type names.
+
+	* Reinstate STDBOOL - just don't build the release on something
+	too old.
+
