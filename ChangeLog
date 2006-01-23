@@ -51,3 +51,6 @@
 	* Reinstate STDBOOL - just don't build the release on something
 	too old.
 
+	* Remove unnecessary debug of character at 128 bytes from the end
+	of the file.
+	

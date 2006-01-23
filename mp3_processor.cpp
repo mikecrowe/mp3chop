@@ -255,7 +255,7 @@ void MP3Processor::HandleID3V1Tag(InputStreamBuffer *input, OutputStreamBuffer *
 	// We're at the end of the file - go 128 bytes back.
 	input->Rewind(128);
 	BYTE ch = *(input->GetPointer());
-	fprintf(stderr, "Byte at -128 is %c (0x%x)\n", isprint(ch) ? ch : '.', ch);
+	//fprintf(stderr, "Byte at -128 is %c (0x%x)\n", isprint(ch) ? ch : '.', ch);
 	if (IsID3V1Header(input->GetPointer()))
 	{
 	    fprintf(stderr, "Found an ID3 tag.\n");
