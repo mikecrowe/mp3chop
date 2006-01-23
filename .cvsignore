@@ -1,6 +1,5 @@
 mp3chop
 *.d
-
 .deps
 config.guess
 config.cache
@@ -25,7 +24,7 @@ Profile
 *.plg
 types2.h
 config.sub
-mp3chop-1.02.tar.gz
+mp3chop-*.tar.gz
 autom4te.cache
 autoscan.log
 configure.scan
