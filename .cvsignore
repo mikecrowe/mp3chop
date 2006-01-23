@@ -24,3 +24,9 @@ Profile
 *.ncb
 *.plg
 types2.h
+config.sub
+mp3chop-1.02.tar.gz
+autom4te.cache
+autoscan.log
+configure.scan
+stamp-h1
