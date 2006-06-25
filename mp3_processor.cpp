@@ -7,6 +7,7 @@
 #endif
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include "file_data_source.h"
 #include "file_data_sink.h"
 #include "xing_frame.h"
@@ -220,16 +221,31 @@ bool MP3Processor::HandleID3V2Tag(InputStreamBuffer *input, OutputStreamBuffer *
 	const BYTE flags = p[5];
 	const bool footer_present = (flags & 0x10) != 0;
 
-	unsigned total_tag_length = UnSyncSafeInteger(p + 6) + 10;
+	int total_tag_length = UnSyncSafeInteger(p + 6) + 10;
 	if (footer_present)
 	    total_tag_length += 10;
 
 	std::cerr << "ID3v2 header length: " << total_tag_length << std::endl;
-	
-	// So now we know how much we should copy from input to output
-	output->Append(p, total_tag_length);
-	input->Advance(total_tag_length);
-	
+
+	// Now output the entire tag. We can't expect to read it all
+	// in one go because it may be huge and the input buffer might
+	// not be able to hold it.
+	int tag_remaining = total_tag_length;
+	while (tag_remaining > 0)
+	{
+	    // There must be at least one byte to get here, our buffer
+	    // will read more if it can so this will be efficient.
+	    input->EnsureAvailable(1);
+
+	    // We only want to consume the tag part.
+	    unsigned this_chunk = std::min(input->GetAvailable(), tag_remaining);
+
+	    output->Append(input->GetPointer(), this_chunk);
+	    input->Advance(this_chunk);
+	    
+	    tag_remaining -= this_chunk;
+	}
+
 	return true;
     }
     catch (InsufficientDataException &)
@@ -245,6 +261,7 @@ bool MP3Processor::HandleID3V2Tag(InputStreamBuffer *input, OutputStreamBuffer *
     catch (UnsupportedID3V2Version &)
     {
 	std::cerr << "Unsupported ID3v2 version" << std::endl;
+	return false;
     }
 }
 

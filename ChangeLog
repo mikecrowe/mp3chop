@@ -56,4 +56,11 @@
 	
 	* Released as v1.05
 
-	
+2006-06-25  Mike Crowe <mac@fysh.org>
+
+	* Fix bug in ID3v2 handling reported by Jacob Singh. There was no
+	attempt made to actually read in the right amount of data before
+	writing out the ID3v2 header. The fix also takes into account that
+	the ID3v2 tag may not fit in the input buffer.
+
+	* Released as v1.06	
