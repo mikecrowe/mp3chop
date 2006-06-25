@@ -2,6 +2,7 @@
 #include "buffer.h"
 #include <stdio.h>
 #include <ctype.h>
+#include "assert.h"
 
 InputStreamBuffer::InputStreamBuffer(int size, int lookbehind)
     : source(0), input_size(size), input_min(lookbehind),
@@ -52,6 +53,9 @@ int InputStreamBuffer::GetAvailable() const
 
 void InputStreamBuffer::EnsureAvailable(int count)
 {
+    // We can't be asked for more than the input size.
+    assert(count <= input_size);
+    
     if (GetAvailable() < count)
     {
 	ShoveUp();
