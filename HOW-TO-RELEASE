@@ -4,8 +4,10 @@
 
 3. Edit config_win32.h to set the version number.
 
-4. Run 'make dist'
+4. Check it all in and tag it.
 
-5. Untar it and check it builds.
+5. Run 'make dist'
 
-6. Put it on the website.
+6. Untar it and check it builds.
+
+7. Put it on the website.
