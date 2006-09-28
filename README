@@ -1,16 +1,27 @@
 mp3chop
 =======
 
-A natty little utility for extracting bits of mp3 files.
+A natty little utility for extracting bits of mp3 files. It does this
+by walking the frames of an MP3 file knowing how much audio they will
+generate and enables/disables output as appropriate depending on the
+timecode associated with the frame. It doesn't actually understand the
+contents of the frames. MP3 frames can contain references to other
+frames and often do. This means that mp3chop can generate output that
+contains references to frames that do not exist in the output. Because
+the MP3 is a streaming format decoders should deal with this correctly
+and glean what information they can from the frames before discarding
+them if they cannot produce audio from them. Some decoders may output
+a diagnostic such as "frame discarded" when this happens.
 
 To install, run:
 
  ./configure && make install
 
-There is no documentation apart from the usage report gleaned by running
+The usual configure options are accepted and more documentation for
+configure is provided in the INSTALL file.
 
  mp3chop --help
 
 
 Mike Crowe, <mac@fysh.org>
-2000/11/05
+2006/09/25

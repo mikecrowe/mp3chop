@@ -1,0 +1,89 @@
+.TH MP3CHOP 1 "25th September 2006"
+.SH NAME
+mp3chop \- A tool for chopping up MP3 files.
+.SH SYNOPSIS
+\fBmp3chop\fP [ -b \Fitime\Fp | --begin=\FiTIME\Fp ] [ -e \FiTIME\Fp | --end=\Fitime\Fp ]
+        [ --strip-id3=1 | -s 1 ] [ --strip-id3=2 | -s 2 ]
+        [ --copyright=0|1 | -c 0|1 ] [ --original=0|1 | -o 0|1 ]
+        [ --dump-header | -d ] [ \fIINPUT FILE\fP ]
+
+.SH DESCRIPTION
+
+\fBmp3chop\fP is a tool for extracting bits of mp3 files. It does this by walking
+the frames of the file knowing how much audio each frame generates and
+enables/disables output as appropriate depending on the timecode associated
+with the frame. It doesn't actually understand the contents of the
+frames. MP3 frames can contain references to other frames and often
+do. This means that mp3chop can generate output that contains references to
+frames that do not exist in the output. Because the MP3 is a streaming
+format decoders should deal with this correctly and glean what information
+they can from the frames before discarding them if they cannot produce
+audio from them. Some decoders may output a diagnostic such as "frame
+discarded" when this happens.
+
+Whilst processing the file \fBmp3chop\fP also checks for obvious corruption
+within the frame headers by checking that they occur at the specified
+offset from the previous frame. Any frames that fail this test are not
+output until a good header is found.
+
+\fBmp3chop\fP can also be used for dumping the headers of frames, forcing
+the copyright and original flags and stripping \fIID3v1\fP and \fIID3v2\fP
+tags.
+
+\fBmp3chop\fP expects to read the MP3 file either on standard input or from
+the supplied filename and writes to standard output.
+
+.SH OPTIONS
+.TP
+\fB-b\fP, --begin\fP=\fITIME\fP
+Do not output any of the frames that are before \fITIME\fP in the
+input. \fITIME\fP must be in the form '\fBmm:ss.hh\fP' where \fBmm\fP
+indicates minutes, \fBss\fP indicates seconds and \fBhh\fP indicates
+hundredths of a second.
+.TP
+\fB-e\fP, \fB--end\fP=\fITIME\fP
+Do not output any of the frames that are after \fITIME\fP in the input.
+\fITIME\fP must be in the form '\fBmm:ss.hh\fP' where \fBmm\fP indicates
+minutes, \fBss\fP indicates seconds and \fBhh\fP indicates hundredths of a
+second.
+.TP
+\fB-s\fP, \fB--strip-id3\fP=\fIVERSION\fP 
+Do not output ID3 tags of the specified version (either 1 or 2). This
+option may be specified multiple times for different versions.
+.TP
+\fB-h\fP, \fB--help\fP
+Display short usage information and exit.
+.TP
+\fB-d\fP, \fB--dump-header\fP
+Output a description of the header of the first valid frame to standard
+output. Disables the output of any MP3 data to standard output.
+.TP
+\fB-D\fP, \fB--dump-all-headers\fP
+Output a description of the header of every frame in the file to standard
+output. Disables the output of any MP3 data to standard output.
+.TP
+\fB-c\fP, \fB--copyright\fP=\fI0\fP|\fI1\fP
+Ensure that the copyright flag is set to the specified value in any frames
+that are output.
+.TP
+\fB-o\fP, \fB--original\fP=\fI0\fP|\fI1\fP
+Ensure that the original flag is set to the specified value in any frames
+that are output.
+.SH EXAMPLES
+Extract ten seconds from the file \fBtune.mp3\fP starting at thirty seconds
+in and write to \fBtune_edit.mp3\fP:
+.IP
+.B mp3chop -b 0:30.00 -e 0:40.00 tune.mp3 > tune_edit.mp3
+.PP
+Validate the frames in the file \fBtune.mp3\fP and output the clean version
+to \fBtune_clean.mp3\fP:
+.IP
+.B mp3chop < tune.mp3 > tune_clean.mp3
+.PP
+.SH AUTHOR
+Written by Mike Crowe.
+.SH BUGS
+Report bugs to <mac@fysh.org>
+.SH SEE ALSO
+\fIlame\fP(1), \fImpg123\fP(1)
+

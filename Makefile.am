@@ -26,6 +26,8 @@ mp3chop_SOURCES:=\
 	trace.h \
 	xing_frame.h
 
+man_MANS:=mp3chop.1
+
 # We don't want to distribute types2.h
 CONFIG_CLEAN_FILES:=\
 	$(srcdir)/types2.h
@@ -42,5 +44,4 @@ MAINTAINERCLEANFILES:=\
 	$(srcdir)/missing \
 	$(srcdir)/aclocal.m4
 
-
-
+EXTRA_DIST=$(man_MANS)
