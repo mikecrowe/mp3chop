@@ -64,3 +64,12 @@
 	the ID3v2 tag may not fit in the input buffer.
 
 	* Released as v1.06	
+
+2006-09-28  Mike Crowe <mac@fysh.org>
+
+	* Add man page and improve README. 
+
+	* Rename --dump-all option as --dump-all-headers, add --version
+	option.
+
+	* Released as v1.07
