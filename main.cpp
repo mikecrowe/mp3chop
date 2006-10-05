@@ -23,7 +23,7 @@ void Help(bool usage_info)
 {
     fprintf(stderr,
 	    "mp3chop: A program for chopping out bits of mp3 files.\n"
-	    "(C) 1999-2003 Mike Crowe, <mac@fysh.org>\n"
+	    "(C) 1999-2006 Mike Crowe, <mac@fysh.org>\n"
 	    "Version " VERSION "\n"
 	    "\n"
 	    "mp3chop is distributed with ABSOLUTELY NO WARRANTY under the terms\n"
