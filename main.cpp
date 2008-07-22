@@ -6,6 +6,7 @@
 #include "file_data_source.h"
 #include "mp3_processor.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 // If we have GNU getopt_long then make sure we include its declaration.
 #if defined(HAVE_GETOPT_LONG)

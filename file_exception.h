@@ -3,6 +3,7 @@
 
 #include <string>
 #include <errno.h>
+#include <string.h>
 #include "platform_config.h"
 
 #if !defined(HAVE_STRERROR)
