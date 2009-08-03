@@ -1,5 +1,5 @@
-bin_PROGRAMS:=mp3chop
-mp3chop_SOURCES:=\
+bin_PROGRAMS=mp3chop
+mp3chop_SOURCES=\
 	header.cpp \
 	main.cpp \
 	mp3_timecode.cpp \
@@ -26,13 +26,13 @@ mp3chop_SOURCES:=\
 	trace.h \
 	xing_frame.h
 
-man_MANS:=mp3chop.1
+man_MANS=mp3chop.1
 
 # We don't want to distribute types2.h
-CONFIG_CLEAN_FILES:=\
+CONFIG_CLEAN_FILES=\
 	$(srcdir)/types2.h
 
-MAINTAINERCLEANFILES:=\
+MAINTAINERCLEANFILES=\
 	$(srcdir)/Makefile.in \
 	$(srcdir)/configure \
 	$(srcdir)/config.sub \
