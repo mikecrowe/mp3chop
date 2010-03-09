@@ -49,6 +49,14 @@ void Help(bool usage_info)
 		"\n");
 }
 
+class UnknownStripSpecificationException : public MP3Processor::Exception
+{
+    virtual void Report()
+    {
+	std::cerr << "Unknown strip specification." << std::endl;
+    }
+};
+
 int main(int ac, char *av[])
 {
 #ifdef HAVE_GETOPT_LONG
@@ -123,7 +131,7 @@ int main(int ac, char *av[])
 		}
 		else
 		{
-		    std::cerr << "Unknown strip specification." << std::endl;
+		    throw UnknownStripSpecificationException();
 		}
 		break;
 
@@ -152,6 +160,7 @@ int main(int ac, char *av[])
     catch (MP3Processor::Exception &e)
     {
 	e.Report();
+	return 1;
     }
     return 0;
 }
