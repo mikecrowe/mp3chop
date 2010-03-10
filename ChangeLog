@@ -1,5 +1,10 @@
 2010-03-10  Mike Crowe <mac@mcrowe.com>
 
+	* Add copyright notice to all source files to make it clear that
+	mp3chop is covered under GPL2 or later.
+
+2010-03-10  Mike Crowe <mac@mcrowe.com>
+
 	* Ensure that the exit status is set appropriately when incorrect
 	options are passed.
 
