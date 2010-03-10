@@ -26,10 +26,10 @@ public:
     };
     class InvalidTimeCodeException : public Exception
     {
-	const std::string offendor;
+	const std::string offender;
     public:
 	virtual ~InvalidTimeCodeException() {}
-	InvalidTimeCodeException(const std::string &tc) : offendor(tc) {}
+	InvalidTimeCodeException(const std::string &tc) : offender(tc) {}
 	virtual void Report();
     };
     

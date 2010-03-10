@@ -370,7 +370,7 @@ bool MP3Processor::ProcessFile(DataSource *data_source, DataSink *data_sink, Cho
 
 void MP3Processor::InvalidTimeCodeException::Report()
 {
-    std::cerr << "Invalid timecode specified: " << offendor << std::endl;
+    std::cerr << "Invalid timecode specified: " << offender << std::endl;
 }
 
 void MP3Processor::BadFileException::Report()
