@@ -1,47 +1,38 @@
-2000-11-05  Mike Crowe <mac@fysh.org>
+2010-03-10  Mike Crowe <mac@mcrowe.com>
 
-	* First public version 0.01 realeased.
+	* Ensure that the exit status is set appropriately when incorrect
+	options are passed.
 
-2003-08-05  Mike Crowe <mac@fysh.org>
+	* Convert from CVS to git.
 
-	* ID3v2 support added.
+2008-07-22  Mike Crowe <mac@fysh.org>
 
-2004-02-06  Mike Crowe <mac@fysh.org>
+	* Integrate fix for compiling against newer versions of libstdc++
+	from Peter Hartley.
 
-	* Support for just dumping the bitrate of every frame added
+	* Released as v1.08.
 
-2004-02-07  Mike Crowe <mac@fysh.org>
+2006-10-05  Mike Crowe <mac@fysh.org>
 
-	* Released as v1.01
+	* Fix copyright date in main.cpp.
 
-2004-02-10  Mike Crowe <mac@fysh.org>
+2006-09-28  Mike Crowe <mac@fysh.org>
 
-	* Fix some packaging problems
-	* Released as v1.02
+	* Add man page and improve README. 
 
-2004-02-10  Mike Crowe <mac@fysh.org>
+	* Rename --dump-all option as --dump-all-headers, add --version
+	option.
 
-	* Now compiles on GCC3 in addition to GCC2.
+	* Released as v1.07
 
-2004-02-10  Mike Crowe <mac@fysh.org>
+2006-06-25  Mike Crowe <mac@fysh.org>
 
-	* Released as v1.03
+	* Fix bug in ID3v2 handling reported by Jacob Singh. There was no
+	attempt made to actually read in the right amount of data before
+	writing out the ID3v2 header. The fix also takes into account that
+	the ID3v2 tag may not fit in the input buffer.
 
-2004-02-12  Mike Crowe <mac@fysh.org>
-
-	* Update configure.in to include size_t check. Can't use STDBOOL
-	as recommended by autoscan because old autoconf doesn't grok it.
-
-	* Lose warning from newer automakes regarding += in Makefile.am.
-	
-2004-05-04  Mike Crowe <mac@fysh.org>
-
-	* Update mp3_processor.cpp to remove debugging code.
-
-	* Update main.cpp so that the -D short option is correctly
-	supported.
-
-	* Released as v1.04
+	* Released as v1.06	
 
 2006-01-23  Mike Crowe <mac@fysh.org>
 
@@ -56,32 +47,47 @@
 	
 	* Released as v1.05
 
-2006-06-25  Mike Crowe <mac@fysh.org>
+2004-05-04  Mike Crowe <mac@fysh.org>
 
-	* Fix bug in ID3v2 handling reported by Jacob Singh. There was no
-	attempt made to actually read in the right amount of data before
-	writing out the ID3v2 header. The fix also takes into account that
-	the ID3v2 tag may not fit in the input buffer.
+	* Update mp3_processor.cpp to remove debugging code.
 
-	* Released as v1.06	
+	* Update main.cpp so that the -D short option is correctly
+	supported.
 
-2006-09-28  Mike Crowe <mac@fysh.org>
+	* Released as v1.04
 
-	* Add man page and improve README. 
+2004-02-12  Mike Crowe <mac@fysh.org>
 
-	* Rename --dump-all option as --dump-all-headers, add --version
-	option.
+	* Update configure.in to include size_t check. Can't use STDBOOL
+	as recommended by autoscan because old autoconf doesn't grok it.
 
-	* Released as v1.07
+	* Lose warning from newer automakes regarding += in Makefile.am.
 
-2006-10-05  Mike Crowe <mac@fysh.org>
+2004-02-10  Mike Crowe <mac@fysh.org>
 
-	* Fix copyright date in main.cpp.
-	
-2008-07-22  Mike Crowe <mac@fysh.org>
+	* Released as v1.03
 
-	* Integrate fix for compiling against newer versions of libstdc++
-	from Peter Hartley.
+2004-02-10  Mike Crowe <mac@fysh.org>
 
-	* Released as v1.08.
-	
+	* Fix some packaging problems
+	* Released as v1.02
+
+2004-02-10  Mike Crowe <mac@fysh.org>
+
+	* Now compiles on GCC3 in addition to GCC2.
+
+2004-02-07  Mike Crowe <mac@fysh.org>
+
+	* Released as v1.01
+
+2004-02-06  Mike Crowe <mac@fysh.org>
+
+	* Support for just dumping the bitrate of every frame added
+
+2003-08-05  Mike Crowe <mac@fysh.org>
+
+	* ID3v2 support added.
+
+2000-11-05  Mike Crowe <mac@fysh.org>
+
+	* First public version 0.01 released.
