@@ -18,6 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 # USA
 
+ACLOCAL_AMFLAGS = -I autotools
+
 bin_PROGRAMS=mp3chop
 mp3chop_SOURCES=\
 	header.cpp \

@@ -29,3 +29,5 @@ autom4te.cache
 autoscan.log
 configure.scan
 stamp-h1
+_stdint.h
+depcomp

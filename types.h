@@ -23,7 +23,7 @@
 #define TYPES_H 1
 
 // Get hold of stdint.h if we have it, otherwise fake it up.
-#include "types2.h"
+#include "_stdint.h"
 
 typedef uint8_t BYTE;
 typedef uint64_t UINT64;
