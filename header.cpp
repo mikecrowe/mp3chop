@@ -80,19 +80,38 @@ void MPEGHeader::Dump()
 {
     if (!Valid())
 	printf("NOT VALID!!!!\n");
-    printf("  Word: %08x\n", word);
-    printf("  Sync: %d\n", IsSync());
-    printf("  CRC protected: %d\n", Protected());
-    printf("  Version: %s\n", VersionString());
-    printf("  Layer: %d\n", LayerNumber());
-    printf("  Bitrate: %d\n", Bitrate());
-    printf("  Samplerate: %d\n", SampleRate());
-    printf("  Padded: %d\n", Padded());
-    printf("  Private: %d\n", Private());
-    printf("  Channel mode: %s\n", ChannelModeName());
-    printf("  Copyright: %d\n", Copyright());
-    printf("  Original: %d\n", Original());
-    printf("  Emphasis: %s\n", EmphasisName());
-    printf("  Frame length: %d\n", FrameLength());
-    printf("  Data length: %d\n", DataLength());
+
+    if (ADTS())
+    {
+	printf("  Word: %08x %06x\n", word, word2 >> 8);
+	printf("  Sync: %d\n", IsSync());
+	printf("  CRC protected: %d\n", Protected());
+	printf("  Version: %s\n", VersionString());
+	printf("  Type: %s\n", ADTSAudioObjectTypeString());
+	printf("  Samplerate: %d\n", ADTSSamplingFrequency());
+	printf("  Private: %d\n", ADTSPrivateStream());
+	printf("  Channel mode: %s\n", ADTSChannelConfigurationString());
+	printf("  Copyright: %d\n", ADTSCopyrightedStream());
+	printf("  Original: %d\n", ADTSOriginality());
+	printf("  Frame length: %d\n", FrameLength());
+	printf("  Data length: %d\n", DataLength());
+    }
+    else
+    {
+	printf("  Word: %08x\n", word);
+	printf("  Sync: %d\n", IsSync());
+	printf("  CRC protected: %d\n", Protected());
+	printf("  Version: %s\n", VersionString());
+	printf("  Layer: %d\n", LayerNumber());
+	printf("  Bitrate: %d\n", MPEGBitrate());
+	printf("  Samplerate: %d\n", SampleRate());
+	printf("  Padded: %d\n", MPEGPadded());
+	printf("  Private: %d\n", MPEGPrivate());
+	printf("  Channel mode: %s\n", MPEGChannelModeName());
+	printf("  Copyright: %d\n", Copyright());
+	printf("  Original: %d\n", Original());
+	printf("  Emphasis: %s\n", EmphasisName());
+	printf("  Frame length: %d\n", MPEGFrameLength());
+	printf("  Data length: %d\n", DataLength());
+    }
 }
