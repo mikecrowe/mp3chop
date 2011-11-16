@@ -35,6 +35,10 @@ class MPEGHeader
     static const int samplerate_table[4][4];
     
 public:
+    // The maximum size of an MPEG header is four bytes of header and
+    // two bytes of CRC.
+    static const int MAX_HEADER_SIZE = 6;
+    
     bool Read(const BYTE *p)
     {
 	// Read the word.

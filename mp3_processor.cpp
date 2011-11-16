@@ -73,14 +73,13 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
     {
 	while (true)
 	{
-	    input->EnsureAvailable(4);
+	    input->EnsureAvailable(MPEGHeader::MAX_HEADER_SIZE);
 	    if (h.Read(input->GetPointer()))
 	    {
 		if (!found_sync)
 		{
 		    // This is sync, but is the next frame?
-		    input->EnsureAvailable(h.FrameLength() + 4);				
-		    
+		    input->EnsureAvailable(h.FrameLength() + MPEGHeader::MAX_HEADER_SIZE);		    
 		    MPEGHeader h2;
 		    if (!h2.Read(input->GetPointer() + h.FrameLength()))
 		    {
@@ -313,12 +312,11 @@ bool MP3Processor::GetFirstHeader(InputStreamBuffer *input, MPEGHeader *header)
     {
 	while (true)
 	{
-	    input->EnsureAvailable(4);
+	    input->EnsureAvailable(MPEGHeader::MAX_HEADER_SIZE);
 	    if (header->Read(input->GetPointer()))
 	    {
 		// This is sync, but is the next frame?
-		input->EnsureAvailable(header->FrameLength() + 4);				
-		
+		input->EnsureAvailable(header->FrameLength() + MPEGHeader::MAX_HEADER_SIZE);		
 		MPEGHeader h2;
 		if (h2.Read(input->GetPointer() + header->FrameLength()))
 		{
