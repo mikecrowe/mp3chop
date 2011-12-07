@@ -542,7 +542,11 @@ public:
     
     int SamplesPerFrame() const
     {
-	if (LayerNumber() == 1)
+	if (ADTS())
+	{
+	    return 1024;
+	}
+	else if (LayerNumber() == 1)
 	{
 	    return 384;
 	}
