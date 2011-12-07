@@ -95,6 +95,7 @@ void MPEGHeader::Dump()
 	printf("  Original: %d\n", ADTSOriginality());
 	printf("  Frame length: %d\n", FrameLength());
 	printf("  Data length: %d\n", DataLength());
+	printf("  Samples per frame: %d\n", SamplesPerFrame());
     }
     else
     {
@@ -113,5 +114,6 @@ void MPEGHeader::Dump()
 	printf("  Emphasis: %s\n", EmphasisName());
 	printf("  Frame length: %d\n", MPEGFrameLength());
 	printf("  Data length: %d\n", DataLength());
+	printf("  Samples per frame: %d\n", SamplesPerFrame());
     }
 }
