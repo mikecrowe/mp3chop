@@ -118,7 +118,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		
 		if (m_mode == 'D')
 		{
-		    printf("Frame #%d\n", input_frame_number);
+		    printf("Frame #%d at %llu\n", input_frame_number, input->GetOffset());
 		    h.Dump();
 		    printf("\n");
 		}
