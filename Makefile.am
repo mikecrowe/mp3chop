@@ -48,6 +48,13 @@ mp3chop_SOURCES=\
 	trace.h \
 	xing_frame.h
 
+check_PROGRAMS=buffer_unittest
+TESTS=buffer_unittest
+buffer_unittest_SOURCES=\
+	buffer_unittest.cpp \
+	buffer.cpp \
+	file_data_source.cpp
+
 man_MANS=mp3chop.1
 
 # We don't want to distribute types2.h
