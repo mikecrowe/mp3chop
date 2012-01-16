@@ -22,6 +22,7 @@ Profile
 *.opt
 *.ncb
 *.plg
+*.o
 types2.h
 config.sub
 mp3chop-*.tar.gz
