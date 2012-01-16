@@ -47,9 +47,15 @@ void InputStreamBuffer::ShoveUp()
 	int begin = input_readp - input_min;
 	if (begin > 0)
 	{
-	    int bytes_kept = input_writep - begin;
-	    if (bytes_kept)
-		memmove(input_buffer, input_buffer + begin, bytes_kept);
+	    if (begin < input_size)
+	    {
+		int bytes_kept = input_writep - begin;
+		if (bytes_kept)
+		    memmove(input_buffer, input_buffer + begin, bytes_kept);
+	    }
+	    else
+		begin = input_size;
+	    
 	    input_readp -= begin;
 	    input_writep -= begin;
 	    buffer_start_offset += begin;
@@ -79,9 +85,12 @@ void InputStreamBuffer::EnsureAvailable(int count)
     
     if (GetAvailable() < count)
     {
-	ShoveUp();
-	
-	input_writep += source->ReadInto(input_buffer + input_writep, Space());
+	do
+	{
+	    ShoveUp();
+	    input_writep += source->ReadInto(input_buffer + input_writep, Space());
+	}
+	while (input_readp > input_size);
 	
 	if (GetAvailable() < count)
 	    throw InsufficientDataException();
