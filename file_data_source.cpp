@@ -66,7 +66,7 @@ void FileDataSource::Close()
     fd = -1;
 }
 
-int FileDataSource::ReadInto(BYTE *buffer, int bytes_required)
+int FileDataSource::ReadInto(uint8_t *buffer, int bytes_required)
 {
     int total_bytes = 0;
     

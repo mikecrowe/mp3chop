@@ -34,6 +34,7 @@
 
 #include <string>
 #include <string.h>
+#include <stdint.h>
 
 //#if defined(__GNUC__)
 //#if __GNUC__ > 2
@@ -98,7 +99,7 @@ struct custom_char_traits
     }
 };
 
-typedef std::basic_string<unsigned char, custom_char_traits<unsigned char, sizeof(unsigned char)> > byte_string;
+typedef std::basic_string<uint8_t, custom_char_traits<uint8_t, sizeof(uint8_t)> > byte_string;
 
 //#endif /* __GNUC__ > 2 */
 //#endif /* defined(__GNUC__) */

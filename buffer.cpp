@@ -29,7 +29,7 @@ InputStreamBuffer::InputStreamBuffer(int size, int lookbehind)
     : source(0), input_size(size), input_min(lookbehind),
       input_writep(0), input_readp(0), buffer_start_offset(0)
 {
-    input_buffer = reinterpret_cast<BYTE *>(operator new(size));
+    input_buffer = reinterpret_cast<uint8_t *>(operator new(size));
 }
 
 InputStreamBuffer::~InputStreamBuffer()
@@ -107,7 +107,7 @@ bool InputStreamBuffer::IsEOFAt(int count)
 {
     while (GetAvailable() < count)
     {
-	BYTE b = input_buffer[input_readp];
+	uint8_t b = input_buffer[input_readp];
 	fprintf(stderr, "In IsEOFAt(%d) with %d currently available - first is '%c' (%d)\n",
 		count, GetAvailable(), isprint(b) ? b : '.', b);
 	
@@ -152,7 +152,7 @@ void OutputStreamBuffer::Flush()
     }
 }
 
-void OutputStreamBuffer::Append(const BYTE *begin, int length)
+void OutputStreamBuffer::Append(const uint8_t *begin, int length)
 {
     if (append_mode)
     {
@@ -167,7 +167,7 @@ void OutputStreamBuffer::Append(const BYTE *begin, int length)
 	// If we're not in append mode then just write it out
 	// directly and then throw enough away from the string to
 	// cover it.
-	const BYTE *end = begin + length;
+	const uint8_t *end = begin + length;
 	while (begin < end)
 	{
 	    int n = sink->WriteOut(begin, length);

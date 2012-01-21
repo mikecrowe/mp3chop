@@ -32,13 +32,13 @@ class InsufficientDataException
 class DataSource
 {
 public:
-    virtual int ReadInto(BYTE *buffer, int bytes_required) = 0;
+    virtual int ReadInto(uint8_t *buffer, int bytes_required) = 0;
 };
 
 class InputStreamBuffer
 {
     DataSource *source;
-    BYTE *input_buffer;
+    uint8_t *input_buffer;
     int input_size;
     int input_min;
     int input_writep;
@@ -61,7 +61,7 @@ public:
     }
     
     void EnsureAvailable(int count);
-    const BYTE *GetPointer() const
+    const uint8_t *GetPointer() const
     {
 	return input_buffer + input_readp;
     }
@@ -76,7 +76,7 @@ public:
 class DataSink
 {
 public:
-    virtual int WriteOut(const BYTE *buffer, int bytes_available) = 0;
+    virtual int WriteOut(const uint8_t *buffer, int bytes_available) = 0;
 };
 
 class OutputStreamBuffer
@@ -104,7 +104,7 @@ public:
     void ClearBookmark();
     void GoToBookmark();
     
-    void Append(const BYTE *start, int length);
+    void Append(const uint8_t *start, int length);
 
     void Flush();
 

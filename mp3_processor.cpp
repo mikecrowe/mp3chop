@@ -43,12 +43,12 @@ int MP3Processor::ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc
     return ((h->SampleRate() * tc.GetAsHundredths()) / 100)/(h->SamplesPerFrame());
 }
 
-bool MP3Processor::IsID3V1Header(const BYTE *p)
+bool MP3Processor::IsID3V1Header(const uint8_t *p)
 {
     return (p[0] == 'T') && (p[1] == 'A') && (p[2] == 'G');
 }
 
-bool MP3Processor::IsID3V2Header(const BYTE *p)
+bool MP3Processor::IsID3V2Header(const uint8_t *p)
 {
     return (p[0] == 'I') && (p[1] == 'D') && (p[2] == '3');
 }
@@ -135,7 +135,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		{
 		    if (filter)
 		    {
-			BYTE b[MAX_FRAME_LENGTH];
+			uint8_t b[MAX_FRAME_LENGTH];
 			unsigned l = h.FrameLength();
 			memcpy(b, input->GetPointer(), h.FrameLength());
 			filter->Apply(&h, b, h.FrameLength());
@@ -190,12 +190,12 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		int frame = i * static_cast<int>(bit);
 		int offset = frame_offsets[frame];
 		double fraction = (double)offset/(double)file_length;
-		BYTE toc_entry = static_cast<BYTE>(fraction * 256);
+		uint8_t toc_entry = static_cast<uint8_t>(fraction * 256);
 		xing.SetTocEntry(i, toc_entry);
 	    }
 	    output->GoToBookmark();
 
-	    BYTE *xing_frame;
+	    uint8_t *xing_frame;
 	    int xing_frame_length;
 	    if (xing.GetFrameContent(&xing_frame, &xing_frame_length))
 	    {
@@ -210,7 +210,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
     }
 }
 
-inline int UnSyncSafeInteger(const BYTE *p)
+inline int UnSyncSafeInteger(const uint8_t *p)
 {
     // If it is syncsafe then it doesn't have the top bit set
     // in any byte.
@@ -227,18 +227,18 @@ bool MP3Processor::HandleID3V2Tag(InputStreamBuffer *input, OutputStreamBuffer *
 	// We need enough data for the entire header.
 	input->EnsureAvailable(10);
 
-	const BYTE *p = input->GetPointer();
+	const uint8_t *p = input->GetPointer();
 	
 	if (memcmp(p, "ID3", 3) != 0)
 	    throw MalformedID3V2Exception();
 
-	const BYTE version_major = p[3];
-	const BYTE version_minor = p[4];
+	const uint8_t version_major = p[3];
+	const uint8_t version_minor = p[4];
 
 	if (version_major > 4)
 	    throw UnsupportedID3V2Version();
 
-	const BYTE flags = p[5];
+	const uint8_t flags = p[5];
 	const bool footer_present = (flags & 0x10) != 0;
 
 	int total_tag_length = UnSyncSafeInteger(p + 6) + 10;
@@ -291,7 +291,7 @@ void MP3Processor::HandleID3V1Tag(InputStreamBuffer *input, OutputStreamBuffer *
     {
 	// We're at the end of the file - go 128 bytes back.
 	input->Rewind(128);
-	BYTE ch = *(input->GetPointer());
+	uint8_t ch = *(input->GetPointer());
 	//fprintf(stderr, "Byte at -128 is %c (0x%x)\n", isprint(ch) ? ch : '.', ch);
 	if (IsID3V1Header(input->GetPointer()))
 	{

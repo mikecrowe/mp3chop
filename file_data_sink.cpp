@@ -56,7 +56,7 @@ void FileDataSink::Close()
     fd = -1;
 }
 
-int FileDataSink::WriteOut(const BYTE *buffer, int bytes_available)
+int FileDataSink::WriteOut(const uint8_t *buffer, int bytes_available)
 {
     int total_bytes = 0;
     

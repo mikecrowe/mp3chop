@@ -25,7 +25,7 @@
 #include <string.h>
 #endif // HAVE_STRING_H
 
-inline int ExtractI4(const BYTE *p)
+inline int ExtractI4(const uint8_t *p)
 {
     int x;
     // big endian extract
@@ -41,7 +41,7 @@ inline int ExtractI4(const BYTE *p)
     return x;
 }
 
-inline void WriteI4(BYTE *p, int i)
+inline void WriteI4(uint8_t *p, int i)
 {
     *p++ = (i >> 24) & 0xff;
     *p++ = (i >> 16) & 0xff;
@@ -60,7 +60,7 @@ XingFrame::~XingFrame()
     frame_content = 0;
 }
 
-bool XingFrame::Read(const BYTE *begin, const BYTE *end)
+bool XingFrame::Read(const uint8_t *begin, const uint8_t *end)
 {
     int i, head_flags;
     int h_id, h_mode, h_sr_index;
@@ -68,7 +68,7 @@ bool XingFrame::Read(const BYTE *begin, const BYTE *end)
     
     // get Xing header data
     this->flags = 0;     // clear to null incase fail
-    const BYTE *buf = begin;
+    const uint8_t *buf = begin;
     
     // get selected MPEG header data
     h_id       = (buf[1] >> 3) & 1;
@@ -144,7 +144,7 @@ bool XingFrame::Read(const BYTE *begin, const BYTE *end)
 
     // Now save it all in frame_content.
     frame_content_length = buf - begin;
-    frame_content = reinterpret_cast<BYTE *>(operator new(frame_content_length));
+    frame_content = reinterpret_cast<uint8_t *>(operator new(frame_content_length));
     memcpy(frame_content, begin, frame_content_length);
     return 1;       // success
 }
@@ -154,7 +154,7 @@ void XingFrame::SetFrameCount(int frame_count)
     WriteI4(frame_content + frames_pos, frame_count);
 }
 
-void XingFrame::SetTocEntry(int i, BYTE v)
+void XingFrame::SetTocEntry(int i, uint8_t v)
 {
     *(frame_content + toc_pos + i) = v;
 }

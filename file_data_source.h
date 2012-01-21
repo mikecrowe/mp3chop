@@ -37,7 +37,7 @@ public:
     void OpenStandardInput();
     void Close();
     
-    virtual int ReadInto(BYTE *buffer, int bytes_required);
+    virtual int ReadInto(uint8_t *buffer, int bytes_required);
 };
 
 #endif

@@ -43,7 +43,7 @@ class XingFrame
     int bytes;      // total bit stream bytes from Xing header data
     int vbr_scale;  // encoded vbr scale from Xing header data
     unsigned char toc[100];
-    BYTE *frame_content;
+    uint8_t *frame_content;
     int frame_content_length;
 
     int frames_pos;
@@ -53,7 +53,7 @@ public:
     XingFrame();
     ~XingFrame();
     
-    bool Read(const BYTE *begin, const BYTE *end);
+    bool Read(const uint8_t *begin, const uint8_t *end);
 
     bool IsVBR() const;
 
@@ -68,9 +68,9 @@ public:
 	return (flags & BYTES_FLAG) != 0;
     }
     void SetFrameCount(int f);
-    void SetTocEntry(int i, BYTE value);
+    void SetTocEntry(int i, uint8_t value);
 
-    bool GetFrameContent(BYTE **content, int *length)
+    bool GetFrameContent(uint8_t **content, int *length)
     {
 	*content = frame_content;
 	*length = frame_content_length;

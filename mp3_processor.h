@@ -78,10 +78,10 @@ private:
     static void ParseTimeCode(TimeCode *tc, const std::string &t);
     static int ConvertTimeCodeToFrameNumber(MPEGHeader *h, const TimeCode &tc);
 
-    static bool IsID3V1Header(const BYTE *p);
+    static bool IsID3V1Header(const uint8_t *p);
 
     /** Only requires three bytes */
-    static bool IsID3V2Header(const BYTE *p);
+    static bool IsID3V2Header(const uint8_t *p);
     
     bool ProcessFile(DataSource *data_source, DataSink *data_sink, Chop *chop, Filter *filter);
     void ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *output, Chop *chop, Filter *filter);

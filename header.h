@@ -39,10 +39,10 @@ public:
     // two bytes of CRC.
     static const int MAX_HEADER_SIZE = 6;
     
-    bool Read(const BYTE *p)
+    bool Read(const uint8_t *p)
     {
 	// Read the word.
-	BYTE b[4];
+	uint8_t b[4];
 	
 	b[0] = *p++;
 	b[1] = *p++;
@@ -59,7 +59,7 @@ public:
 	return IsSync() && Valid();
     }
 
-    void Write(BYTE *p)
+    void Write(uint8_t *p)
     {
 	*p++ = (word >> 24);
 	*p++ = (word >> 16) & 0xff;
