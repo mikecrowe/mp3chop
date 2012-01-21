@@ -32,25 +32,25 @@ class InsufficientDataException
 class DataSource
 {
 public:
-    virtual int ReadInto(uint8_t *buffer, int bytes_required) = 0;
+    virtual size_t ReadInto(uint8_t *buffer, size_t bytes_required) = 0;
 };
 
 class InputStreamBuffer
 {
     DataSource *source;
     uint8_t *input_buffer;
-    int input_size;
-    int input_min;
-    int input_writep;
-    int input_readp;
-    int buffer_start_offset;
+    size_t input_size;
+    size_t input_min;
+    size_t input_writep;
+    uint64_t input_readp; //< Needs to be 64-bit so we can advance by 4GiB or more.
+    uint64_t buffer_start_offset;
     
 protected:
     void ShoveUp();
-    int Space() const;
+    size_t Space() const;
     
 public:
-    InputStreamBuffer(int size, int lookbehind);
+    InputStreamBuffer(size_t size, size_t lookbehind);
     ~InputStreamBuffer();
     DataSource *SetSource(DataSource *new_source)
     {
@@ -60,23 +60,23 @@ public:
 	return old_source;
     }
     
-    void EnsureAvailable(int count);
+    void EnsureAvailable(size_t count);
     const uint8_t *GetPointer() const
     {
 	return input_buffer + input_readp;
     }
-    int GetOffset() const;
-    int GetAvailable() const;
-    void Advance(int count);
-    void Rewind(int count);
+    uint64_t GetOffset() const;
+    size_t GetAvailable() const;
+    void Advance(uint64_t count);
+    void Rewind(size_t count);
     
-    bool IsEOFAt(int count);
+    bool IsEOFAt(size_t count);
 };
 
 class DataSink
 {
 public:
-    virtual int WriteOut(const uint8_t *buffer, int bytes_available) = 0;
+    virtual int WriteOut(const uint8_t *buffer, size_t bytes_available) = 0;
 };
 
 class OutputStreamBuffer
@@ -85,7 +85,7 @@ class OutputStreamBuffer
     byte_string output_buffer;
     bool bookmark_active;
     bool append_mode;
-    int offset;
+    uint64_t offset;
     
 protected:
     void Output();
@@ -104,11 +104,11 @@ public:
     void ClearBookmark();
     void GoToBookmark();
     
-    void Append(const uint8_t *start, int length);
+    void Append(const uint8_t *start, size_t length);
 
     void Flush();
 
-    int GetOffset() const
+    uint64_t GetOffset() const
     {
 	return offset;
     }

@@ -88,7 +88,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 			continue;
 		    }
 		    found_sync = true;
-		    fprintf(stderr, "Found sync at offset %d\n", input->GetOffset());
+		    fprintf(stderr, "Found sync at offset %llu\n", input->GetOffset());
 		}
 		
 		input->EnsureAvailable(h.FrameLength());
@@ -168,7 +168,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 	    input->Advance(1);
 	    
 	    if (found_sync)
-		fprintf(stderr, "Lost sync at offset %d\n", input->GetOffset());
+		fprintf(stderr, "Lost sync at offset %llu\n", input->GetOffset());
 	    found_sync = false;
 	}
     }
@@ -250,7 +250,7 @@ bool MP3Processor::HandleID3V2Tag(InputStreamBuffer *input, OutputStreamBuffer *
 	// Now output the entire tag. We can't expect to read it all
 	// in one go because it may be huge and the input buffer might
 	// not be able to hold it.
-	int tag_remaining = total_tag_length;
+	size_t tag_remaining = total_tag_length;
 	while (tag_remaining > 0)
 	{
 	    // There must be at least one byte to get here, our buffer
@@ -258,7 +258,7 @@ bool MP3Processor::HandleID3V2Tag(InputStreamBuffer *input, OutputStreamBuffer *
 	    input->EnsureAvailable(1);
 
 	    // We only want to consume the tag part.
-	    unsigned this_chunk = std::min(input->GetAvailable(), tag_remaining);
+	    size_t this_chunk = std::min(input->GetAvailable(), tag_remaining);
 
 	    output->Append(input->GetPointer(), this_chunk);
 	    input->Advance(this_chunk);

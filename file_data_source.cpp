@@ -66,9 +66,9 @@ void FileDataSource::Close()
     fd = -1;
 }
 
-int FileDataSource::ReadInto(uint8_t *buffer, int bytes_required)
+size_t FileDataSource::ReadInto(uint8_t *buffer, size_t bytes_required)
 {
-    int total_bytes = 0;
+    size_t total_bytes = 0;
     
     // We may take more than one read to get all the data.
     while (total_bytes < bytes_required)

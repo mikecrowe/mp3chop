@@ -25,7 +25,7 @@
 #include <ctype.h>
 #include "assert.h"
 
-InputStreamBuffer::InputStreamBuffer(int size, int lookbehind)
+InputStreamBuffer::InputStreamBuffer(size_t size, size_t lookbehind)
     : source(0), input_size(size), input_min(lookbehind),
       input_writep(0), input_readp(0), buffer_start_offset(0)
 {
@@ -44,9 +44,9 @@ void InputStreamBuffer::ShoveUp()
     // data.
     if (input_readp > input_min)
     {
-	int begin = input_readp - input_min;
-	if (begin > 0)
+	if (input_readp > input_min)
 	{
+	    size_t begin = input_readp - input_min;
 	    if (begin < input_size)
 	    {
 		int bytes_kept = input_writep - begin;
@@ -63,22 +63,25 @@ void InputStreamBuffer::ShoveUp()
     }
 }
 
-int InputStreamBuffer::GetOffset() const
+uint64_t InputStreamBuffer::GetOffset() const
 {
     return buffer_start_offset + input_readp;
 }
 
-int InputStreamBuffer::Space() const
+size_t InputStreamBuffer::Space() const
 {
+    assert(input_size > input_writep);
     return input_size - input_writep;
 }
 
-int InputStreamBuffer::GetAvailable() const
+size_t InputStreamBuffer::GetAvailable() const
 {
+    if (input_writep < input_readp)
+	return 0;
     return input_writep - input_readp;
 }
 
-void InputStreamBuffer::EnsureAvailable(int count)
+void InputStreamBuffer::EnsureAvailable(size_t count)
 {
     // We can't be asked for more than the input size.
     assert(count <= input_size);
@@ -97,12 +100,12 @@ void InputStreamBuffer::EnsureAvailable(int count)
     }
 }
 
-void InputStreamBuffer::Advance(int count)
+void InputStreamBuffer::Advance(uint64_t count)
 {
     input_readp += count;
 }						
 
-void InputStreamBuffer::Rewind(int count)
+void InputStreamBuffer::Rewind(size_t count)
 {
     if (input_readp >= count)
 	input_readp -= count;
@@ -112,7 +115,7 @@ void InputStreamBuffer::Rewind(int count)
 
 // Keep reading data until either we have _more_ than count or we find
 // EOF.
-bool InputStreamBuffer::IsEOFAt(int count)
+bool InputStreamBuffer::IsEOFAt(size_t count)
 {
     while (GetAvailable() < count)
     {
@@ -156,12 +159,12 @@ void OutputStreamBuffer::Flush()
 {
     if (!bookmark_active)
     {
-	int n = sink->WriteOut(output_buffer.data(), output_buffer.length());
+	size_t n = sink->WriteOut(output_buffer.data(), output_buffer.length());
 	output_buffer.erase(0, n);
     }
 }
 
-void OutputStreamBuffer::Append(const uint8_t *begin, int length)
+void OutputStreamBuffer::Append(const uint8_t *begin, size_t length)
 {
     if (append_mode)
     {
@@ -179,7 +182,7 @@ void OutputStreamBuffer::Append(const uint8_t *begin, int length)
 	const uint8_t *end = begin + length;
 	while (begin < end)
 	{
-	    int n = sink->WriteOut(begin, length);
+	    size_t n = sink->WriteOut(begin, length);
 	    output_buffer.erase(0, n);
 	    begin += n;
 	}

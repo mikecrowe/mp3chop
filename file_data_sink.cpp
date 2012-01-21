@@ -56,9 +56,9 @@ void FileDataSink::Close()
     fd = -1;
 }
 
-int FileDataSink::WriteOut(const uint8_t *buffer, int bytes_available)
+int FileDataSink::WriteOut(const uint8_t *buffer, size_t bytes_available)
 {
-    int total_bytes = 0;
+    size_t total_bytes = 0;
     
     // We may take more than one write to send all the data.
     while (total_bytes < bytes_available)

@@ -36,7 +36,7 @@ public:
     void OpenStandardOutput();
     void Close();
 
-    virtual int WriteOut(const uint8_t *buffer, int bytes_available);
+    virtual int WriteOut(const uint8_t *buffer, size_t bytes_available);
 };
 
 #endif
