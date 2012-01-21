@@ -129,8 +129,8 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		}
 
 		// Process frame
-		TimeCode current_time((static_cast<UINT64>(input_frame_number) * output_samples_per_frame * UINT64LITERAL(100))
-				      / static_cast<UINT64>(output_sample_rate));
+		TimeCode current_time((static_cast<int64_t>(input_frame_number) * output_samples_per_frame * UINT64LITERAL(100))
+				      / static_cast<int64_t>(output_sample_rate));
 		if (chop->IsFrameRequired(input_frame_number, current_time))
 		{
 		    if (filter)

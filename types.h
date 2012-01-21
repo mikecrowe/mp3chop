@@ -25,8 +25,6 @@
 // Get hold of stdint.h if we have it, otherwise fake it up.
 #include "_stdint.h"
 
-typedef uint64_t UINT64;
-
 #ifdef _MSC_VER
 #define UINT64LITERAL(LLL) LLL ## i64
 #else
