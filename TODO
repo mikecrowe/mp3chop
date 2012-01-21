@@ -21,5 +21,13 @@ to Windows relatively easily and there is scope for factoring out the real
 implementation to some sort of library that can be used by multiple UI
 implementations (e.g. Gnome, KDE, Win32).
 
+Simple cleanups
+===============
+
+Catch errors from close(2) in FileDataSink:Close()
+
+Add more unit-tests including a 64-bit unit test (it might take a
+while to run.)
+
 Mike Crowe
 2000/11/05.
