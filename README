@@ -22,8 +22,8 @@ To install, run:
 The usual configure options are accepted and more documentation for
 configure is provided in the INSTALL file.
 
+ man ./mp3chop.1
  mp3chop --help
 
-
-Mike Crowe, <mac@fysh.org>
-2006/09/25
+Mike Crowe, <mac@mcrowe.com>
+2013/01/13
