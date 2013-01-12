@@ -44,8 +44,8 @@
 void Help(bool usage_info)
 {
     fprintf(stderr,
-	    "mp3chop: A program for chopping out bits of mp3 files.\n"
-	    "(C) 1999-2010 Mike Crowe, <mac@fysh.org>\n"
+	    "mp3chop: A program for chopping out bits of ADTS MP3 and AAC files.\n"
+	    "(C) 1999-2013 Mike Crowe, <mac@mcrowe.com>\n"
 	    "Version " VERSION "\n"
 	    "\n"
 	    "mp3chop is distributed with ABSOLUTELY NO WARRANTY under the terms\n"
