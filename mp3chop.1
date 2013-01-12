@@ -40,19 +40,19 @@ errors on standard error.
 
 .SH OPTIONS
 .TP
-\fB-b\fP, --begin\fP=\fITIME\fP
+\fB-b TIME\fP, --begin\fP=\fITIME\fP
 Do not output any of the frames that are before \fITIME\fP in the
 input. \fITIME\fP must be in the form '\fBmm:ss.hh\fP' where \fBmm\fP
 indicates minutes, \fBss\fP indicates seconds and \fBhh\fP indicates
 hundredths of a second.
 .TP
-\fB-e\fP, \fB--end\fP=\fITIME\fP
+\fB-e TIME\fP, \fB--end\fP=\fITIME\fP
 Do not output any of the frames that are after \fITIME\fP in the input.
 \fITIME\fP must be in the form '\fBmm:ss.hh\fP' where \fBmm\fP indicates
 minutes, \fBss\fP indicates seconds and \fBhh\fP indicates hundredths of a
 second.
 .TP
-\fB-s\fP, \fB--strip-id3\fP=\fIVERSION\fP 
+\fB-s VERSION\fP, \fB--strip-id3\fP=\fIVERSION\fP
 Do not output ID3 tags of the specified version (either 1 or 2). This
 option may be specified multiple times for different versions.
 .TP
@@ -67,11 +67,11 @@ output. Disables the output of any MP3 data to standard output.
 Output a description of the header of every frame in the file to standard
 output. Disables the output of any MP3 data to standard output.
 .TP
-\fB-c\fP, \fB--copyright\fP=\fI0\fP|\fI1\fP
+\fB-c 0|1\fP, \fB--copyright\fP=\fI0\fP|\fI1\fP
 Ensure that the copyright flag is set to the specified value in any frames
 that are output.
 .TP
-\fB-o\fP, \fB--original\fP=\fI0\fP|\fI1\fP
+\fB-o 0|1\fP, \fB--original\fP=\fI0\fP|\fI1\fP
 Ensure that the original flag is set to the specified value in any frames
 that are output.
 
