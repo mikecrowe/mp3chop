@@ -19,7 +19,7 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 dnl USA
 
 
-AC_INIT([mp3chop],[1.08],[mac@mcrowe.com])
+AC_INIT([mp3chop],[2.0],[mac@mcrowe.com])
 AM_INIT_AUTOMAKE([-Wall -Werror])
 AC_CONFIG_MACRO_DIR(autotools)
 AC_CONFIG_SRCDIR(chop.cpp)

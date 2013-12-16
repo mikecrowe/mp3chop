@@ -59,5 +59,5 @@
 #define PACKAGE "mp3chop"
 
 /* Version number of package. */
-#define VERSION "1.08"
+#define VERSION "2.0"
 
