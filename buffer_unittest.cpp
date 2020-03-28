@@ -8,7 +8,8 @@
 void checked_write(int fd, const void *buffer, size_t size)
 {
     int rc = write(fd, buffer, size);
-    assert(rc == size);
+    assert(size >= 0);
+    assert(static_cast<size_t>(rc) == size);
 }
 
 int main()
