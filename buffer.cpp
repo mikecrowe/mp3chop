@@ -120,7 +120,7 @@ bool InputStreamBuffer::IsEOFAt(size_t count)
     while (GetAvailable() < count)
     {
 	uint8_t b = input_buffer[input_readp];
-	fprintf(stderr, "In IsEOFAt(%d) with %d currently available - first is '%c' (%d)\n",
+	fprintf(stderr, "In IsEOFAt(%zu) with %zu currently available - first is '%c' (%d)\n",
 		count, GetAvailable(), isprint(b) ? b : '.', b);
 	
 	ShoveUp();
@@ -135,7 +135,7 @@ bool InputStreamBuffer::IsEOFAt(size_t count)
 	}
 	else
 	{
-	    fprintf(stderr, "Got zero byte read with %d available\n", GetAvailable());
+	    fprintf(stderr, "Got zero byte read with %zu available\n", GetAvailable());
 	    // We got a zero byte read - that means EOF!
 	    return (GetAvailable() == count);
 	}

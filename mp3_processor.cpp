@@ -22,6 +22,7 @@
 #include "mp3_processor.h"
 #include <cstdio>
 #include <climits>
+#include <cinttypes>
 #include <iostream>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -88,7 +89,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 			continue;
 		    }
 		    found_sync = true;
-		    fprintf(stderr, "Found sync at offset %llu\n", input->GetOffset());
+		    fprintf(stderr, "Found sync at offset %" PRIu64 "\n", input->GetOffset());
 		}
 		
 		input->EnsureAvailable(h.FrameLength());
@@ -118,7 +119,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		
 		if (m_mode == 'D')
 		{
-		    printf("Frame #%d at %llu\n", input_frame_number, input->GetOffset());
+		    printf("Frame #%d at %" PRIu64 "\n", input_frame_number, input->GetOffset());
 		    h.Dump();
 		    printf("\n");
 		}
@@ -168,7 +169,7 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 	    input->Advance(1);
 	    
 	    if (found_sync)
-		fprintf(stderr, "Lost sync at offset %llu\n", input->GetOffset());
+		fprintf(stderr, "Lost sync at offset %" PRIu64 "\n", input->GetOffset());
 	    found_sync = false;
 	}
     }
