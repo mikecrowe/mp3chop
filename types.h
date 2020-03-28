@@ -22,8 +22,7 @@
 #ifndef TYPES_H
 #define TYPES_H 1
 
-// Get hold of stdint.h if we have it, otherwise fake it up.
-#include "_stdint.h"
+#include <cstdint>
 
 #ifdef _MSC_VER
 #define UINT64LITERAL(LLL) LLL ## i64
