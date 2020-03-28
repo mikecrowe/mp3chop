@@ -137,7 +137,6 @@ void MP3Processor::ProcessFrames(InputStreamBuffer *input, OutputStreamBuffer *o
 		    if (filter)
 		    {
 			uint8_t b[MAX_FRAME_LENGTH];
-			unsigned l = h.FrameLength();
 			memcpy(b, input->GetPointer(), h.FrameLength());
 			filter->Apply(&h, b, h.FrameLength());
 			h.Write(b);
@@ -234,7 +233,7 @@ bool MP3Processor::HandleID3V2Tag(InputStreamBuffer *input, OutputStreamBuffer *
 	    throw MalformedID3V2Exception();
 
 	const uint8_t version_major = p[3];
-	const uint8_t version_minor = p[4];
+	//const uint8_t version_minor = p[4];
 
 	if (version_major > 4)
 	    throw UnsupportedID3V2Version();
@@ -292,7 +291,7 @@ void MP3Processor::HandleID3V1Tag(InputStreamBuffer *input, OutputStreamBuffer *
     {
 	// We're at the end of the file - go 128 bytes back.
 	input->Rewind(128);
-	uint8_t ch = *(input->GetPointer());
+	//uint8_t ch = *(input->GetPointer());
 	//fprintf(stderr, "Byte at -128 is %c (0x%x)\n", isprint(ch) ? ch : '.', ch);
 	if (IsID3V1Header(input->GetPointer()))
 	{
