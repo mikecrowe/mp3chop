@@ -25,7 +25,6 @@ endforeach
 check_functions = [
   ['HAVE_GETOPT_LONG', 'getopt_long', '#include<getopt.h>'],
   ['HAVE_GETOPT', 'getopt', '#include<getopt.h>'],
-  ['HAVE_STRERROR', 'strerror', '#include<string.h>'],
 ]
 
 foreach f : check_functions
