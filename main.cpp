@@ -97,7 +97,7 @@ int main(int ac, char *av[])
     };
 #endif // HAVE_GETOPT_LONG
 
-#ifdef HAVE_GETOPT
+#if defined(HAVE_GETOPT) || defined(HAVE_GETOPT_LONG)
     const char *short_options = "-b:e:c:o:s:hdDvV";
 #endif // HAVE_GETOPT
     
