@@ -475,25 +475,20 @@ void MP3Processor::HandleBeginTimeCode(const std::string &tc_str)
 {
     TimeCode begin_tc;
     ParseTimeCode(&begin_tc, tc_str);
-    std::auto_ptr<Chop> p(new BeforeTimeChop(begin_tc));
-    begin_chop = p;
+    begin_chop.reset(new BeforeTimeChop(begin_tc));
 }
 
 void MP3Processor::HandleEndTimeCode(const std::string &tc_str)
 {
     TimeCode end_tc;
     ParseTimeCode(&end_tc, tc_str);
-    std::auto_ptr<Chop> p(new AfterTimeChop(end_tc));
-    end_chop = p;
+    end_chop.reset(new AfterTimeChop(end_tc));
 }
 
 void MP3Processor::CreateSCMSFilter()
 {
     if (scms_filter.get() == NULL)
-    {
-	std::auto_ptr<SCMSFilter> p(new SCMSFilter);
-	scms_filter = p;
-    }
+	scms_filter.reset(new SCMSFilter);
 }
 
 void MP3Processor::HandleForceCopyright(bool b)

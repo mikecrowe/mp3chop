@@ -66,9 +66,9 @@ public:
     };
     
 private:
-    std::auto_ptr<Chop> begin_chop;
-    std::auto_ptr<Chop> end_chop;
-    std::auto_ptr<SCMSFilter> scms_filter;
+    std::unique_ptr<Chop> begin_chop;
+    std::unique_ptr<Chop> end_chop;
+    std::unique_ptr<SCMSFilter> scms_filter;
     
     int m_files;
     char m_mode;
