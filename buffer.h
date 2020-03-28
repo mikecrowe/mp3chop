@@ -31,6 +31,8 @@ class InsufficientDataException
 
 class DataSource
 {
+protected:
+    virtual ~DataSource() {}
 public:
     virtual size_t ReadInto(uint8_t *buffer, size_t bytes_required) = 0;
 };
@@ -75,6 +77,8 @@ public:
 
 class DataSink
 {
+protected:
+    virtual ~DataSink() {}
 public:
     virtual int WriteOut(const uint8_t *buffer, size_t bytes_available) = 0;
 };

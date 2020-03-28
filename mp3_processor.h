@@ -41,8 +41,11 @@ class UnsupportedID3V2Version
 class MP3Processor
 {
 public:
-    struct Exception
+    class Exception
     {
+    protected:
+        virtual ~Exception() {}
+    public:
 	virtual void Report() = 0;
     };
     class InvalidTimeCodeException : public Exception

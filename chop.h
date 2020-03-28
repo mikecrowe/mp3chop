@@ -28,6 +28,7 @@ class Chop
 {
 public:
     virtual bool IsFrameRequired(const int frame_index, const TimeCode frame_tc) = 0;
+    virtual ~Chop() {}
 };
 
 class AndChop : public Chop

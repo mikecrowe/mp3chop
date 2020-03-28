@@ -27,6 +27,8 @@
 
 class Filter
 {
+protected:
+    virtual ~Filter() {}
 public:
     virtual void Apply(MPEGHeader *header, unsigned char *buffer, unsigned length) = 0;
 };
