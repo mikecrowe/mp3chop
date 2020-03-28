@@ -119,6 +119,8 @@ public:
 		return "MPEG 4/AAC";
 	    case 1:
 		return "MPEG Version 2?";
+	    default:
+		return "Unknown version";
 	    }
 	}
 	else
