@@ -122,13 +122,8 @@ bool XingFrame::Read(const uint8_t *begin, const uint8_t *end)
     if (head_flags & TOC_FLAG)
     {
 	this->toc_pos = buf - begin;
-        if(this->toc != 0)
-	{
-            for(i=0;i<100;i++)
-	    {
-		this->toc[i] = buf[i];
-	    }
-        }
+        for(i=0;i<100;i++)
+            this->toc[i] = buf[i];
         buf+=100;
     }
     
