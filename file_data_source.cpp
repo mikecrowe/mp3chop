@@ -26,10 +26,6 @@
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
-#ifdef HAVE_IO_H
-#include <io.h>
-#endif
-
 
 FileDataSource::FileDataSource()
     : opened(false), fd(-1)

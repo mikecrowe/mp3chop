@@ -19,7 +19,7 @@
  * USA
  */
 
-#include "platform_config.h"
+#include "config.h"
 #include "xing_frame.h"
 #include <string.h>
 

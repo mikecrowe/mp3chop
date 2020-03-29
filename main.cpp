@@ -19,7 +19,7 @@
  * USA
  */
 
-#include "platform_config.h"
+#include "config.h"
 #include <iostream>
 #include "header.h"
 #include "mp3_timecode.h"

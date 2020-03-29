@@ -25,7 +25,7 @@
 #include <string>
 #include <errno.h>
 #include <string.h>
-#include "platform_config.h"
+#include "config.h"
 
 class FileException
 {
