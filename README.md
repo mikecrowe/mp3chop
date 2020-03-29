@@ -17,8 +17,8 @@ problem does not occur.
 
 Licensing
 =========
-mp3chop is licensed under the GNU General Public License. See the
-COPYING file for a copy of this licence.
+mp3chop is licensed under the GNU General Public License version 2 or, at
+your option, later. See the COPYING file for a copy of this licence.
 
 Installation on POSIX-like Systems
 ==================================
