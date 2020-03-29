@@ -1,18 +1,19 @@
 #include "buffer.h"
-#include <assert.h>
 #include <fcntl.h>
 #include <unistd.h>
 
 #include "file_data_source.h"
 
+#include <catch2/catch.hpp>
+
 void checked_write(int fd, const void *buffer, size_t size)
 {
     int rc = write(fd, buffer, size);
-    assert(size >= 0);
-    assert(static_cast<size_t>(rc) == size);
+    REQUIRE(size >= 0);
+    REQUIRE(static_cast<size_t>(rc) == size);
 }
 
-int main()
+TEST_CASE("InputStreamBuffer")
 {
     // Generate test file
     int fd = open("testfile1", O_WRONLY|O_CREAT|O_TRUNC, 0777);
@@ -34,47 +35,31 @@ int main()
     input.SetSource(&data_source);
 
     input.EnsureAvailable(4);
-    assert(input.GetOffset() == 0);
-    assert(memcmp(input.GetPointer(), "ABCD", 4) == 0);
-    assert(memcmp(input.GetPointer(), "ABCD", 4) == 0);
+    REQUIRE(input.GetOffset() == 0);
+    REQUIRE(memcmp(input.GetPointer(), "ABCD", 4) == 0);
+    REQUIRE(memcmp(input.GetPointer(), "ABCD", 4) == 0);
 
     input.Advance(2);
-    assert(input.GetOffset() == 2);
+    REQUIRE(input.GetOffset() == 2);
     input.EnsureAvailable(6);
-    assert(memcmp(input.GetPointer(), "CDEFGH", 6) == 0);
+    REQUIRE(memcmp(input.GetPointer(), "CDEFGH", 6) == 0);
 
     input.Advance(20);
-    assert(input.GetOffset() == 22);
+    REQUIRE(input.GetOffset() == 22);
     input.EnsureAvailable(4);
-    assert(memcmp(input.GetPointer(), "WXYZ", 4) == 0);
+    REQUIRE(memcmp(input.GetPointer(), "WXYZ", 4) == 0);
 
     input.Advance(52);
-    assert(input.GetOffset() == 74);
+    REQUIRE(input.GetOffset() == 74);
     input.EnsureAvailable(4);
-    assert(memcmp(input.GetPointer(), "WXYZ", 4) == 0);
+    REQUIRE(memcmp(input.GetPointer(), "WXYZ", 4) == 0);
 
     input.Advance(29);
-    try
-    {
-	input.EnsureAvailable(2);
-	assert(false);
-    }
-    catch (InsufficientDataException &e)
-    {
-    }
+    REQUIRE_THROWS_AS(input.EnsureAvailable(2), InsufficientDataException);
 
     input.EnsureAvailable(1);
-    assert(memcmp(input.GetPointer(), "Z", 1) == 0);
+    REQUIRE(memcmp(input.GetPointer(), "Z", 1) == 0);
     
     input.Advance(1);
-    try
-    {
-	input.EnsureAvailable(1);
-	assert(false);
-    }
-    catch (InsufficientDataException &e)
-    {
-    }
-    
-    return 0;
+    REQUIRE_THROWS_AS(input.EnsureAvailable(1), InsufficientDataException);
 }
