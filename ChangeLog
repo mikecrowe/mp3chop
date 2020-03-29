@@ -1,3 +1,17 @@
+2020-03-29  Mike Crowe <mac@mcrowe.com>
+
+	* Switch from automake to Meson
+
+	* Released as v2.1.
+
+2013-12-16  Mike Crowe <mac@mcrowe.com>
+
+	* Released as v2.0.
+
+2013-01-12  Mike Crowe <mac@mcrowe.com>
+
+	* Add ADTS AAC support and update documentation.
+
 2010-03-10  Mike Crowe <mac@mcrowe.com>
 
 	* Add copyright notice to all source files to make it clear that

@@ -1,4 +1,4 @@
-project('mp3chop', 'cpp', version: '2.0.1')
+project('mp3chop', 'cpp', version: '2.1')
 
 cc = meson.get_compiler('cpp')
 cdata = configuration_data()
