@@ -1,0 +1,5 @@
+mp3chop (2.1) unstable; urgency=low
+
+  * Initial Debian package release.
+
+ -- Mike Crowe <mac@mcrowe.com>  Sun, 13 Nov 2020 17:11:57 +0100

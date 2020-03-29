@@ -1,0 +1,22 @@
+Source: mp3chop
+Section: sound
+Priority: optional
+Maintainer: Mike Crowe <mac@mcrowe.com>
+Build-Depends: debhelper (>= 12), cmake
+Standards-Version: 3.9.5
+Homepage: http://www.mcrowe.com/~mac/mp3chop/
+Vcs-Git: https://gitlab.com/mp3chop/mp3chop.git
+Vcs-Browser: https://gitlab.com/mp3chop/mp3chop
+
+Package: mp3chop
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Extract parts of MP3 and AAC files losslessly
+ mp3chop is a small command line program that can be used for
+ extracting parts of MP3 and ADTS-format AAC files and reporting
+ information about these files. It is designed to work as a filter
+ program in the UNIX sense. As it processes the file it only outputs
+ MP3/ADTS frames so it also removes junk from the file. It is capable
+ of stripping or preserving ID3v1 and ID3v2 tags. Since it only works
+ at the frame level it supports MPEG 1 & 2 layer 1 and layer 2 files
+ in addition to the layer 3 files implied by its name.
