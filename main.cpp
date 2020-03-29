@@ -1,7 +1,7 @@
 /*
  * mp3chop
  *
- * (C) 2000-2010 Mike Crowe <mac@mcrowe.com>
+ * (C) 2000-2020 Mike Crowe <mac@mcrowe.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -45,7 +45,7 @@ void Help(bool usage_info)
 {
     fprintf(stderr,
 	    "mp3chop: A program for chopping out bits of ADTS MP3 and AAC files.\n"
-	    "(C) 1999-2013 Mike Crowe, <mac@mcrowe.com>\n"
+	    "(C) 1999-2020 Mike Crowe, <mac@mcrowe.com>\n"
 	    "Version " VERSION "\n"
 	    "\n"
 	    "mp3chop is distributed with ABSOLUTELY NO WARRANTY under the terms\n"

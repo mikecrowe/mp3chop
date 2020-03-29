@@ -1,7 +1,7 @@
 /*
  * mp3chop
  *
- * (C) 2000-2010 Mike Crowe <mac@mcrowe.com>
+ * (C) 2000-2020 Mike Crowe <mac@mcrowe.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
