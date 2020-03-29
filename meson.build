@@ -46,8 +46,12 @@ executable('mp3chop', 'main.cpp',
 	   link_with: libchop,
 	   install: true)
 
+catch2 = subproject('catch2', required: false)
+catch2_dep = catch2.get_variable('catch2_dep')
+
 buffer_unittest = executable('buffer_unittest',
 			     'buffer_unittest.cpp',
+			     dependencies: catch2_dep,
 			     link_with: libchop)
 test('buffer_unittest', buffer_unittest)
 
