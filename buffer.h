@@ -22,8 +22,8 @@
 #ifndef BUFFER_H
 #define BUFFER_H 1
 
+#include <vector>
 #include "types.h"
-#include "byte_string.h"
 
 class InsufficientDataException
 {
@@ -84,7 +84,7 @@ public:
 class OutputStreamBuffer
 {
     DataSink *sink;
-    byte_string output_buffer;
+    std::vector<uint8_t> output_buffer;
     bool bookmark_active;
     bool append_mode;
     uint64_t offset;

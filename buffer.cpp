@@ -126,8 +126,9 @@ void OutputStreamBuffer::Flush()
 {
     if (!bookmark_active)
     {
-	size_t n = sink->WriteOut(output_buffer.data(), output_buffer.length());
-	output_buffer.erase(0, n);
+	size_t n = sink->WriteOut(output_buffer.data(), output_buffer.size());
+	assert(n <= output_buffer.size());
+	output_buffer.erase(output_buffer.begin(), output_buffer.begin() + n);
     }
 }
 
@@ -135,7 +136,7 @@ void OutputStreamBuffer::Append(const uint8_t *begin, size_t length)
 {
     if (append_mode)
     {
-	output_buffer.append(begin, length);
+	output_buffer.insert(output_buffer.end(), begin, begin + length);
 	if (output_buffer.size() > 8192)
 	    Flush();
 
@@ -144,13 +145,14 @@ void OutputStreamBuffer::Append(const uint8_t *begin, size_t length)
     else
     {
 	// If we're not in append mode then just write it out
-	// directly and then throw enough away from the string to
+	// directly and then throw enough away from the buffer to
 	// cover it.
 	const uint8_t *end = begin + length;
 	while (begin < end)
 	{
 	    size_t n = sink->WriteOut(begin, length);
-	    output_buffer.erase(0, n);
+	    const size_t discard = std::min(n, output_buffer.size());
+	    output_buffer.erase(output_buffer.begin(), output_buffer.begin() + discard);
 	    begin += n;
 	}
     }
