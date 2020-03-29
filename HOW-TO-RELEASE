@@ -1,13 +1,10 @@
-1. Ensure the ChangeLog is correct.
+1. Edit meson.build to set the version number.
 
-2. Edit configure.in to set the version number.
+2. Check it all in and tag it.
 
-3. Edit config_win32.h to set the version number.
+3. Run:
 
-4. Check it all in and tag it.
+    meson dist
+    ninja -C dist dist
 
-5. Run 'make dist'
-
-6. Untar it and check it builds.
-
-7. Put it on the website.
+4. Find the results in dist/meson-dist/mp3chop-X.Y.tar.xz
