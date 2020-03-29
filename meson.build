@@ -31,7 +31,6 @@ configure_file(input : 'config.h.meson',
   configuration : cdata)
 
 sources = [ 'header.cpp',
-	    'main.cpp',
 	    'mp3_timecode.cpp',
 	    'buffer.cpp',
 	    'file_data_source.cpp',
@@ -41,12 +40,15 @@ sources = [ 'header.cpp',
 	    'chop.cpp',
 	    'xing_frame.cpp' ]
 
-executable('mp3chop', sources, install: true)
+libchop = static_library('chop', sources)
 
-buffer_unittest_sources = [ 'buffer_unittest.cpp',
-			    'buffer.cpp',
-			    'file_data_source.cpp' ]
-buffer_unittest = executable('buffer_unittest', buffer_unittest_sources)
+executable('mp3chop', 'main.cpp',
+	   link_with: libchop,
+	   install: true)
+
+buffer_unittest = executable('buffer_unittest',
+			     'buffer_unittest.cpp',
+			     link_with: libchop)
 test('buffer_unittest', buffer_unittest)
 
 install_man('mp3chop.1')
