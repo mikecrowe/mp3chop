@@ -28,8 +28,4 @@
 #include "config.h"
 #endif
 
-#ifndef HAVE_ASSERT_H
-#define assert(x) do {} while(0)
-#endif
-
 #endif // PLATFORM_CONFIG_H

@@ -21,9 +21,7 @@
 
 #include "platform_config.h"
 #include "xing_frame.h"
-#ifdef HAVE_STRING_H
 #include <string.h>
-#endif // HAVE_STRING_H
 
 inline int ExtractI4(const uint8_t *p)
 {
