@@ -62,4 +62,9 @@ TEST_CASE("InputStreamBuffer")
     
     input.Advance(1);
     REQUIRE_THROWS_AS(input.EnsureAvailable(1), InsufficientDataException);
+
+    REQUIRE_THROWS_AS(input.Rewind(30), InsufficientDataException);
+    input.Rewind(3);
+    input.EnsureAvailable(3);
+    REQUIRE(memcmp(input.GetPointer(), "XYZ", 3) == 0);
 }
