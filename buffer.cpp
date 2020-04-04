@@ -110,36 +110,6 @@ void InputStreamBuffer::Rewind(size_t count)
 	throw InsufficientDataException();
 }
 
-// Keep reading data until either we have _more_ than count or we find
-// EOF.
-bool InputStreamBuffer::IsEOFAt(size_t count)
-{
-    while (GetAvailable() < count)
-    {
-	uint8_t b = input_buffer[input_readp];
-	fprintf(stderr, "In IsEOFAt(%zu) with %zu currently available - first is '%c' (%d)\n",
-		count, GetAvailable(), isprint(b) ? b : '.', b);
-	
-	ShoveUp();
-	
-	if (Space() < count)
-	    return false;
-	
-	int bytes_read = source->ReadInto(input_buffer + input_writep, Space());
-	if (bytes_read)
-	{
-	    input_writep += bytes_read;
-	}
-	else
-	{
-	    fprintf(stderr, "Got zero byte read with %zu available\n", GetAvailable());
-	    // We got a zero byte read - that means EOF!
-	    return (GetAvailable() == count);
-	}
-    }
-    return false;
-}
-
 OutputStreamBuffer::OutputStreamBuffer()
     : sink(NULL),
       bookmark_active(false),

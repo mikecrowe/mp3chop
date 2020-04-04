@@ -71,8 +71,6 @@ public:
     size_t GetAvailable() const;
     void Advance(uint64_t count);
     void Rewind(size_t count);
-    
-    bool IsEOFAt(size_t count);
 };
 
 class DataSink
