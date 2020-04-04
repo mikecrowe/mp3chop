@@ -44,22 +44,19 @@ void InputStreamBuffer::ShoveUp()
     // data.
     if (input_readp > input_min)
     {
-	if (input_readp > input_min)
+	size_t begin = input_readp - input_min;
+	if (begin < input_size)
 	{
-	    size_t begin = input_readp - input_min;
-	    if (begin < input_size)
-	    {
-		int bytes_kept = input_writep - begin;
-		if (bytes_kept)
-		    memmove(input_buffer, input_buffer + begin, bytes_kept);
-	    }
-	    else
-		begin = input_size;
-	    
-	    input_readp -= begin;
-	    input_writep -= begin;
-	    buffer_start_offset += begin;
+	    int bytes_kept = input_writep - begin;
+	    if (bytes_kept)
+		memmove(input_buffer, input_buffer + begin, bytes_kept);
 	}
+	else
+	    begin = input_size;
+
+	input_readp -= begin;
+	input_writep -= begin;
+	buffer_start_offset += begin;
     }
 }
 
