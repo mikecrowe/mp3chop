@@ -59,6 +59,12 @@ if catch2.found()
 				 dependencies: catch2_dep,
 				 link_with: [ libchop, libcatch2_main ])
   test('input_buffer_test', input_buffer_test)
+
+  output_buffer_test = executable('output_buffer_test',
+				 'output_buffer_test.cpp',
+				 dependencies: catch2_dep,
+				 link_with: [ libchop, libcatch2_main ])
+  test('output_buffer_test', output_buffer_test)
 endif
 
 install_man('mp3chop.1')
