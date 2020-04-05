@@ -1,0 +1,54 @@
+#!/bin/sh
+set -e
+
+src="$1"
+tmp="$2"
+exe="$3"
+
+# Meson will pass a relative path. We must convert it to an absolute
+# path before we change directory.
+mp3chop=$(realpath ${exe})
+
+[ -z "${src}" ] || cd "${src}"
+[ -n "${tmp}" ] || tmp=tmp
+[ -n "${mp3chop}" ] || mp3chop=mp3chop
+
+pass=0
+count=0
+check() {
+    name="$1"
+    input="$2"
+    expected="${name}.expected"
+    shift
+    shift
+    count=$((${count}+1))
+    echo "TEST ${name} using ${mp3chop}" 1>&2
+    ${mp3chop} "$@" < "${input}" > "${tmp}/${name}.out"
+    if cmp "${expected}" "${tmp}/${name}.out"; then
+	echo "PASS" 1>&2
+	rm "${tmp}/${name}.out"
+	pass=$((${pass}+1))
+    else
+	echo "FAIL" 1>&2
+    fi
+    echo 1>&2
+}
+
+check pass-through cbr-jstereo-32-48000.mp3
+
+check strip-id3v1 cbr-jstereo-32-48000.mp3 --strip-id3=1
+check strip-id3v2 cbr-jstereo-32-48000.mp3 --strip-id3=2
+check strip-id3 cbr-jstereo-32-48000.mp3 --strip-id3=1 --strip-id3=2
+
+dd if=/dev/zero of=${tmp}/1Mzero bs=1024 count=1024
+check no-frames ${tmp}/1Mzero
+
+cat ${tmp}/1Mzero cbr-jstereo-32-48000.mp3 > ${tmp}/leading-zeros.mp3
+cat cbr-jstereo-32-48000.mp3 ${tmp}/1Mzero > ${tmp}/trailing-zeros.mp3
+
+check leading-zeros ${tmp}/leading-zeros.mp3
+check trailing-zeros ${tmp}/trailing-zeros.mp3
+
+check beginning cbr-jstereo-32-48000.mp3 --end=20:0.0
+check end cbr-jstereo-32-48000.mp3 --begin=10:0.0
+check middle cbr-jstereo-32-48000.mp3 --begin=5:0.0 --end=25:0.0

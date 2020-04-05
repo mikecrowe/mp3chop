@@ -42,9 +42,9 @@ sources = [ 'header.cpp',
 
 libchop = static_library('chop', sources)
 
-executable('mp3chop', 'main.cpp',
-	   link_with: libchop,
-	   install: true)
+mp3chop_exe = executable('mp3chop', 'main.cpp',
+			 link_with: libchop,
+			 install: true)
 
 catch2 = subproject('catch2', required: false)
 if catch2.found()
@@ -66,5 +66,7 @@ if catch2.found()
 				 link_with: [ libchop, libcatch2_main ])
   test('output_buffer_test', output_buffer_test)
 endif
+
+subdir('approval-tests')
 
 install_man('mp3chop.1')
