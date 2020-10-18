@@ -1,0 +1,43 @@
+debian-buster-gcc:
+    image: debian:buster-slim
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build build-essential ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
+
+debian-bullseye-gcc:
+    image: debian:bullseye-slim
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build build-essential ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
+
+debian-bullseye-clang:
+    image: debian:bullseye-slim
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build build-essential clang ca-certificates
+    script:
+        - CC=clang CXX=clang++ meson --werror build
+        - cd build
+        - ninja -v
+        - ninja test
+
+gcc-latest:
+    image: gcc:latest
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
