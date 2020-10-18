@@ -29,7 +29,7 @@ class FileDataSink : public DataSink
 {
     bool opened;
     int fd;
-    
+
 public:
     FileDataSink();
     virtual ~FileDataSink();

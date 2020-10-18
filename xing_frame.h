@@ -29,12 +29,12 @@ class XingFrame
 {
     enum
     {
-	FRAMES_FLAG     = 0x0001,
-	BYTES_FLAG      = 0x0002,
-	TOC_FLAG        = 0x0004,
-	VBR_SCALE_FLAG  = 0x0008,
+        FRAMES_FLAG     = 0x0001,
+        BYTES_FLAG      = 0x0002,
+        TOC_FLAG        = 0x0004,
+        VBR_SCALE_FLAG  = 0x0008,
 
-	FRAMES_AND_BYTES= (FRAMES_FLAG | BYTES_FLAG),
+        FRAMES_AND_BYTES= (FRAMES_FLAG | BYTES_FLAG),
     };
     int h_id;       // from MPEG header, 0=MPEG2, 1=MPEG1
     int samprate;   // determined from MPEG header
@@ -48,36 +48,35 @@ class XingFrame
 
     int frames_pos;
     int toc_pos;
-    
+
 public:
     XingFrame();
     ~XingFrame();
-    
+
     bool Read(const uint8_t *begin, const uint8_t *end);
 
     bool IsVBR() const;
 
     bool GetFrameCount(int *f) const
     {
-	*f = frames;
-	return (flags & FRAMES_FLAG);
+        *f = frames;
+        return (flags & FRAMES_FLAG);
     }
     bool GetByteCount(int *b) const
     {
-	*b = bytes;
-	return (flags & BYTES_FLAG) != 0;
+        *b = bytes;
+        return (flags & BYTES_FLAG) != 0;
     }
     void SetFrameCount(int f);
     void SetTocEntry(int i, uint8_t value);
 
     bool GetFrameContent(uint8_t **content, int *length)
     {
-	*content = frame_content;
-	*length = frame_content_length;
-	fprintf(stderr, "%p:frame_content=%p\n", this, frame_content);
-	return (frame_content != 0);
+        *content = frame_content;
+        *length = frame_content_length;
+        fprintf(stderr, "%p:frame_content=%p\n", this, frame_content);
+        return (frame_content != 0);
     }
 };
 
 #endif
-

@@ -20,7 +20,7 @@ TEST_CASE("InputStreamBuffer")
 
     char buffer1[26];
     for(unsigned int i = 0; i < 26; ++i)
-	buffer1[i] = 'A' + i;
+        buffer1[i] = 'A' + i;
 
     checked_write(fd, buffer1, 26);
     checked_write(fd, buffer1, 26);
@@ -59,7 +59,7 @@ TEST_CASE("InputStreamBuffer")
 
     input.EnsureAvailable(1);
     REQUIRE(memcmp(input.GetPointer(), "Z", 1) == 0);
-    
+
     input.Advance(1);
     REQUIRE_THROWS_AS(input.EnsureAvailable(1), InsufficientDataException);
 

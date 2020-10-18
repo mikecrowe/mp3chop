@@ -42,7 +42,7 @@ void FileDataSource::Open(const std::string &filename)
     Close();
     fd = open(filename.c_str(), O_RDONLY);
     if (fd < 0)
-	throw FileException();
+        throw FileException();
     opened = true;
 }
 
@@ -57,7 +57,7 @@ void FileDataSource::Close()
 {
     if (opened)
     {
-	close(fd);
+        close(fd);
     }
     fd = -1;
 }
@@ -65,17 +65,16 @@ void FileDataSource::Close()
 size_t FileDataSource::ReadInto(uint8_t *buffer, size_t bytes_required)
 {
     size_t total_bytes = 0;
-    
+
     // We may take more than one read to get all the data.
     while (total_bytes < bytes_required)
     {
-	int bytes = read(fd, buffer, bytes_required);
-	if (bytes < 0)
-	    throw FileException();
-	if (bytes == 0)
-	    break;
-	total_bytes += bytes;
+        int bytes = read(fd, buffer, bytes_required);
+        if (bytes < 0)
+            throw FileException();
+        if (bytes == 0)
+            break;
+        total_bytes += bytes;
     }
     return total_bytes;
 }
-

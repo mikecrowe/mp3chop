@@ -27,43 +27,45 @@ endforeach
 cdata.set('MP3CHOP_VERSION', meson.project_version())
 
 configure_file(input : 'config.h.meson',
-  output : 'config.h',
-  configuration : cdata)
+               output : 'config.h',
+               configuration : cdata)
 
-sources = [ 'header.cpp',
-	    'mp3_timecode.cpp',
-	    'buffer.cpp',
-	    'file_data_source.cpp',
-	    'file_data_sink.cpp',
-	    'filter.cpp',
-	    'mp3_processor.cpp',
-	    'chop.cpp',
-	    'xing_frame.cpp' ]
+sources = [
+  'header.cpp',
+  'mp3_timecode.cpp',
+  'buffer.cpp',
+  'file_data_source.cpp',
+  'file_data_sink.cpp',
+  'filter.cpp',
+  'mp3_processor.cpp',
+  'chop.cpp',
+  'xing_frame.cpp'
+]
 
 libchop = static_library('chop', sources)
 
 mp3chop_exe = executable('mp3chop', 'main.cpp',
-			 link_with: libchop,
-			 install: true)
+                         link_with: libchop,
+                         install: true)
 
 catch2 = subproject('catch2', required: false)
 if catch2.found()
   catch2_dep = catch2.get_variable('catch2_dep')
 
   libcatch2_main = static_library('catch2_main',
-				  'catch2_main.cpp',
-				  dependencies: catch2_dep)
+                                  'catch2_main.cpp',
+                                  dependencies: catch2_dep)
 
   input_buffer_test = executable('input_buffer_test',
-				 'input_buffer_test.cpp',
-				 dependencies: catch2_dep,
-				 link_with: [ libchop, libcatch2_main ])
+                                 'input_buffer_test.cpp',
+                                 dependencies: catch2_dep,
+                                 link_with: [ libchop, libcatch2_main ])
   test('input_buffer_test', input_buffer_test)
 
   output_buffer_test = executable('output_buffer_test',
-				 'output_buffer_test.cpp',
-				 dependencies: catch2_dep,
-				 link_with: [ libchop, libcatch2_main ])
+                                  'output_buffer_test.cpp',
+                                  dependencies: catch2_dep,
+                                  link_with: [ libchop, libcatch2_main ])
   test('output_buffer_test', output_buffer_test)
 endif
 

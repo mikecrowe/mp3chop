@@ -39,37 +39,37 @@ TEST_CASE("OutputStreamBuffer")
 
     SECTION("Bookmark")
     {
-	osb.SetBookmark();
-	REQUIRE(sink.GetResult() == "ABCDEFGH");
-	osb.Append(reinterpret_cast<const uint8_t *>("IJKL"), 4);
-	REQUIRE(sink.GetResult() == "ABCDEFGH");
+        osb.SetBookmark();
+        REQUIRE(sink.GetResult() == "ABCDEFGH");
+        osb.Append(reinterpret_cast<const uint8_t *>("IJKL"), 4);
+        REQUIRE(sink.GetResult() == "ABCDEFGH");
 
-	// Flush with bookmark active should have no effect
-	osb.Flush();
-	REQUIRE(sink.GetResult() == "ABCDEFGH");
+        // Flush with bookmark active should have no effect
+        osb.Flush();
+        REQUIRE(sink.GetResult() == "ABCDEFGH");
 
-	SECTION("ClearBookmark")
-	{
-	    osb.ClearBookmark();
-	    REQUIRE(sink.GetResult() == "ABCDEFGHIJKL");
-	    osb.Append(reinterpret_cast<const uint8_t *>("MNOP"), 4);
-	    REQUIRE(sink.GetResult() == "ABCDEFGHIJKLMNOP");
-	}
+        SECTION("ClearBookmark")
+        {
+            osb.ClearBookmark();
+            REQUIRE(sink.GetResult() == "ABCDEFGHIJKL");
+            osb.Append(reinterpret_cast<const uint8_t *>("MNOP"), 4);
+            REQUIRE(sink.GetResult() == "ABCDEFGHIJKLMNOP");
+        }
 
-	SECTION("GoToBookmark")
-	{
-	    osb.GoToBookmark();
-	    osb.Append(reinterpret_cast<const uint8_t *>("123"), 3);
-	    REQUIRE(sink.GetResult() == "ABCDEFGH123");
-	}
+        SECTION("GoToBookmark")
+        {
+            osb.GoToBookmark();
+            osb.Append(reinterpret_cast<const uint8_t *>("123"), 3);
+            REQUIRE(sink.GetResult() == "ABCDEFGH123");
+        }
     }
 
     SECTION("Large")
     {
-	for(auto i = 0; i < 1000; ++i)
-	    osb.Append(reinterpret_cast<const uint8_t *>("0123456789"), 10);
-	REQUIRE(sink.GetResult().size() == 8198);
-	osb.Flush();
-	REQUIRE(sink.GetResult().size() == 10008);
+        for(auto i = 0; i < 1000; ++i)
+            osb.Append(reinterpret_cast<const uint8_t *>("0123456789"), 10);
+        REQUIRE(sink.GetResult().size() == 8198);
+        osb.Flush();
+        REQUIRE(sink.GetResult().size() == 10008);
     }
 }

@@ -33,8 +33,8 @@ inline bool AndChop::IsRightFrameRequired(const int frame_index, const TimeCode 
 
 bool AndChop::IsFrameRequired(const int frame_index, const TimeCode frame_tc)
 {
-    return (IsLeftFrameRequired(frame_index, frame_tc) 
-	    && IsRightFrameRequired(frame_index, frame_tc));
+    return (IsLeftFrameRequired(frame_index, frame_tc)
+            && IsRightFrameRequired(frame_index, frame_tc));
 }
 
 bool BeforeTimeChop::IsFrameRequired(const int frame_index, const TimeCode frame_tc)
@@ -51,5 +51,3 @@ bool NullChop::IsFrameRequired(const int frame_index, const TimeCode frame_tc)
 {
     return false;
 }
-
-

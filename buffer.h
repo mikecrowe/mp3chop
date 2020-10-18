@@ -46,26 +46,26 @@ class InputStreamBuffer
     size_t input_writep;
     uint64_t input_readp; //< Needs to be 64-bit so we can advance by 4GiB or more.
     uint64_t buffer_start_offset;
-    
+
 protected:
     void ShoveUp();
     size_t Space() const;
-    
+
 public:
     InputStreamBuffer(size_t size, size_t lookbehind);
     ~InputStreamBuffer();
     DataSource *SetSource(DataSource *new_source)
     {
-	DataSource *old_source = source;
-	source = new_source;
-	buffer_start_offset = 0;
-	return old_source;
+        DataSource *old_source = source;
+        source = new_source;
+        buffer_start_offset = 0;
+        return old_source;
     }
-    
+
     void EnsureAvailable(size_t count);
     const uint8_t *GetPointer() const
     {
-	return input_buffer + input_readp;
+        return input_buffer + input_readp;
     }
     uint64_t GetOffset() const;
     size_t GetAvailable() const;
@@ -88,31 +88,31 @@ class OutputStreamBuffer
     bool bookmark_active;
     bool append_mode;
     uint64_t offset;
-    
+
 protected:
     void Output();
-    
+
 public:
     OutputStreamBuffer();
     ~OutputStreamBuffer();
     DataSink *SetSink(DataSink *new_sink)
     {
-	DataSink *old_sink = sink;
-	sink = new_sink;
-	return old_sink;
+        DataSink *old_sink = sink;
+        sink = new_sink;
+        return old_sink;
     }
 
     void SetBookmark();
     void ClearBookmark();
     void GoToBookmark();
-    
+
     void Append(const uint8_t *start, size_t length);
 
     void Flush();
 
     uint64_t GetOffset() const
     {
-	return offset;
+        return offset;
     }
 };
 

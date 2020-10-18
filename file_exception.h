@@ -30,7 +30,7 @@
 class FileException
 {
     int error_number;
-    
+
 public:
     FileException() : error_number(errno) {}
     FileException(int e) : error_number(e) {}

@@ -29,14 +29,14 @@ class FileDataSource : public DataSource
 {
     bool opened;
     int fd;
-    
+
 public:
     FileDataSource();
     virtual ~FileDataSource();
     void Open(const std::string &filename);
     void OpenStandardInput();
     void Close();
-    
+
     virtual size_t ReadInto(uint8_t *buffer, size_t bytes_required);
 };
 

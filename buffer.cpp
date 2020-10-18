@@ -44,19 +44,19 @@ void InputStreamBuffer::ShoveUp()
     // data.
     if (input_readp > input_min)
     {
-	size_t begin = input_readp - input_min;
-	if (begin < input_size)
-	{
-	    int bytes_kept = input_writep - begin;
-	    if (bytes_kept)
-		memmove(input_buffer, input_buffer + begin, bytes_kept);
-	}
-	else
-	    begin = input_size;
+        size_t begin = input_readp - input_min;
+        if (begin < input_size)
+        {
+            int bytes_kept = input_writep - begin;
+            if (bytes_kept)
+                memmove(input_buffer, input_buffer + begin, bytes_kept);
+        }
+        else
+            begin = input_size;
 
-	input_readp -= begin;
-	input_writep -= begin;
-	buffer_start_offset += begin;
+        input_readp -= begin;
+        input_writep -= begin;
+        buffer_start_offset += begin;
     }
 }
 
@@ -74,7 +74,7 @@ size_t InputStreamBuffer::Space() const
 size_t InputStreamBuffer::GetAvailable() const
 {
     if (input_writep < input_readp)
-	return 0;
+        return 0;
     return input_writep - input_readp;
 }
 
@@ -82,32 +82,32 @@ void InputStreamBuffer::EnsureAvailable(size_t count)
 {
     // We can't be asked for more than the input size.
     assert(count <= input_size);
-    
+
     if (GetAvailable() < count)
     {
-	do
-	{
-	    ShoveUp();
-	    input_writep += source->ReadInto(input_buffer + input_writep, Space());
-	}
-	while (input_readp > input_size);
-	
-	if (GetAvailable() < count)
-	    throw InsufficientDataException();
+        do
+        {
+            ShoveUp();
+            input_writep += source->ReadInto(input_buffer + input_writep, Space());
+        }
+        while (input_readp > input_size);
+
+        if (GetAvailable() < count)
+            throw InsufficientDataException();
     }
 }
 
 void InputStreamBuffer::Advance(uint64_t count)
 {
     input_readp += count;
-}						
+}
 
 void InputStreamBuffer::Rewind(size_t count)
 {
     if (input_readp >= count)
-	input_readp -= count;
+        input_readp -= count;
     else
-	throw InsufficientDataException();
+        throw InsufficientDataException();
 }
 
 OutputStreamBuffer::OutputStreamBuffer()
@@ -126,9 +126,9 @@ void OutputStreamBuffer::Flush()
 {
     if (!bookmark_active)
     {
-	size_t n = sink->WriteOut(output_buffer.data(), output_buffer.size());
-	assert(n <= output_buffer.size());
-	output_buffer.erase(output_buffer.begin(), output_buffer.begin() + n);
+        size_t n = sink->WriteOut(output_buffer.data(), output_buffer.size());
+        assert(n <= output_buffer.size());
+        output_buffer.erase(output_buffer.begin(), output_buffer.begin() + n);
     }
 }
 
@@ -136,25 +136,25 @@ void OutputStreamBuffer::Append(const uint8_t *begin, size_t length)
 {
     if (append_mode)
     {
-	output_buffer.insert(output_buffer.end(), begin, begin + length);
-	if (output_buffer.size() > 8192)
-	    Flush();
+        output_buffer.insert(output_buffer.end(), begin, begin + length);
+        if (output_buffer.size() > 8192)
+            Flush();
 
-	offset += length;
+        offset += length;
     }
     else
     {
-	// If we're not in append mode then just write it out
-	// directly and then throw enough away from the buffer to
-	// cover it.
-	const uint8_t *end = begin + length;
-	while (begin < end)
-	{
-	    size_t n = sink->WriteOut(begin, length);
-	    const size_t discard = std::min(n, output_buffer.size());
-	    output_buffer.erase(output_buffer.begin(), output_buffer.begin() + discard);
-	    begin += n;
-	}
+        // If we're not in append mode then just write it out
+        // directly and then throw enough away from the buffer to
+        // cover it.
+        const uint8_t *end = begin + length;
+        while (begin < end)
+        {
+            size_t n = sink->WriteOut(begin, length);
+            const size_t discard = std::min(n, output_buffer.size());
+            output_buffer.erase(output_buffer.begin(), output_buffer.begin() + discard);
+            begin += n;
+        }
     }
 }
 

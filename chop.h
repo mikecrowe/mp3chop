@@ -35,10 +35,10 @@ class AndChop : public Chop
 {
     Chop *left;
     Chop *right;
-	
+
     bool IsLeftFrameRequired(const int, const TimeCode);
     bool IsRightFrameRequired(const int, const TimeCode);
-	
+
 public:
     AndChop(Chop *l, Chop *r) : left(l), right(r) {}
     virtual bool IsFrameRequired(const int frame_index, const TimeCode frame_tc);
@@ -48,7 +48,7 @@ public:
 class BeforeTimeChop : public Chop
 {
     TimeCode cut_time;
-    
+
 public:
     BeforeTimeChop(const TimeCode tc) : cut_time(tc) {}
     virtual bool IsFrameRequired(const int frame_index, const TimeCode frame_tc);
@@ -57,7 +57,7 @@ public:
 class AfterTimeChop : public Chop
 {
     TimeCode cut_time;
-    
+
 public:
     AfterTimeChop(const TimeCode tc) : cut_time(tc) {}
     virtual bool IsFrameRequired(const int frame_index, const TimeCode frame_tc);
