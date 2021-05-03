@@ -31,6 +31,17 @@ debian-bullseye-clang:
         - ninja -v
         - ninja test
 
+gcc-11:
+    image: gcc:11
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
+
 gcc-latest:
     image: gcc:latest
     before_script:
