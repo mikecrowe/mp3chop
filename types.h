@@ -22,6 +22,7 @@
 #ifndef TYPES_H
 #define TYPES_H 1
 
+#include <cstddef>
 #include <cstdint>
 
 #ifdef _MSC_VER
