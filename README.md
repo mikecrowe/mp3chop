@@ -40,7 +40,7 @@ You can run the mp3chop tool from the build directory, or copy it
 elsewhere. Alternatively, to install the program and its manual page
 on your system run:
 
-    sudo ninja -C install
+    sudo ninja -C build install
 
 More information about Meson can be found at https://mesonbuild.com/
 
