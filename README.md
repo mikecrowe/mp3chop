@@ -48,12 +48,12 @@ Contributing
 ============
 Please send bug reports, patches and pull requests to:
 
- Mike Crowe <mac@mcrowe.com>
+- Mike Crowe <mac@mcrowe.com>
 
 Also see:
 
- https://www.mcrowe.com/~mac/mp3chop/
- https://gitlab.com/mp3chop/mp3chop
+- https://www.mcrowe.com/~mac/mp3chop/
+- https://gitlab.com/mp3chop/mp3chop
 
 Mike Crowe, <mac@mcrowe.com>
-2020/03/29
+2022/05/08
