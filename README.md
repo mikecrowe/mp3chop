@@ -15,6 +15,20 @@ them. Some decoders may output a diagnostic such as "frame discarded"
 when this happens. AAC ADTS frames are always self contained so this
 problem does not occur.
 
+Alternatives
+============
+Since I started developing mp3chop over twenty years ago, other tools have
+been developed that handle far more file formats and might be a better
+alternative. The one I now use is [ffmpeg](https://ffmpeg.org/) which can
+be used to chop arbitrary files with commands like:
+
+```shell
+ffmpeg -loglevel warning -y -i input_file.mp3 -ss mm:ss -to mm:ss -c copy output_file.mp3
+```
+
+The existence of alternatives means that mp3chop isn't really developed any
+more.
+
 Licensing
 =========
 mp3chop is licensed under the GNU General Public License version 2 or, at
@@ -48,12 +62,12 @@ Contributing
 ============
 Please send bug reports, patches and pull requests to:
 
- Mike Crowe <mac@mcrowe.com>
+- Mike Crowe <mac@mcrowe.com>
 
 Also see:
 
- https://www.mcrowe.com/~mac/mp3chop/
- https://gitlab.com/mp3chop/mp3chop
+- https://www.mcrowe.com/~mac/mp3chop/
+- https://gitlab.com/mp3chop/mp3chop
 
 Mike Crowe, <mac@mcrowe.com>
-2020/03/29
+2022/05/08
