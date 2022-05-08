@@ -1,3 +1,13 @@
+2022-05-08  Mike Crowe <mac@mcrowe.com>
+
+    * Fix compilation with GCC 11 and later.
+
+    * Fix installation instructions and formatting in README.md.
+
+    * Describe ffmpeg as an alternative in README.md.
+
+    * Released as v2.2.
+
 2020-03-29  Mike Crowe <mac@mcrowe.com>
 
 	* Switch from automake to Meson
@@ -37,7 +47,7 @@
 
 2006-09-28  Mike Crowe <mac@fysh.org>
 
-	* Add man page and improve README. 
+	* Add man page and improve README.
 
 	* Rename --dump-all option as --dump-all-headers, add --version
 	option.
@@ -51,7 +61,7 @@
 	writing out the ID3v2 header. The fix also takes into account that
 	the ID3v2 tag may not fit in the input buffer.
 
-	* Released as v1.06	
+	* Released as v1.06
 
 2006-01-23  Mike Crowe <mac@fysh.org>
 
@@ -63,7 +73,7 @@
 
 	* Remove unnecessary debug of character at 128 bytes from the end
 	of the file.
-	
+
 	* Released as v1.05
 
 2004-05-04  Mike Crowe <mac@fysh.org>
