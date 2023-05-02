@@ -48,24 +48,18 @@ mp3chop_exe = executable('mp3chop', 'main.cpp',
                          link_with: libchop,
                          install: true)
 
-catch2 = subproject('catch2', required: false)
-if catch2.found()
-  catch2_dep = catch2.get_variable('catch2_dep')
-
-  libcatch2_main = static_library('catch2_main',
-                                  'catch2_main.cpp',
-                                  dependencies: catch2_dep)
-
+catch2_with_main_dep = dependency('catch2-with-main', fallback : [ 'catch2', 'catch2_with_main_dep' ], required : false)
+if catch2_with_main_dep.found()
   input_buffer_test = executable('input_buffer_test',
                                  'input_buffer_test.cpp',
-                                 dependencies: catch2_dep,
-                                 link_with: [ libchop, libcatch2_main ])
+                                 dependencies: catch2_with_main_dep,
+                                 link_with: [ libchop ])
   test('input_buffer_test', input_buffer_test)
 
   output_buffer_test = executable('output_buffer_test',
                                   'output_buffer_test.cpp',
-                                  dependencies: catch2_dep,
-                                  link_with: [ libchop, libcatch2_main ])
+                                  dependencies: catch2_with_main_dep,
+                                  link_with: [ libchop ])
   test('output_buffer_test', output_buffer_test)
 endif
 
