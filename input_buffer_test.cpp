@@ -4,7 +4,7 @@
 
 #include "file_data_source.h"
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 void checked_write(int fd, const void *buffer, size_t size)
 {

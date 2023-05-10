@@ -2,7 +2,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 class StringSink : public DataSink
 {
