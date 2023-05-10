@@ -74,3 +74,80 @@ gcc-latest:
         - cd build
         - ninja -v
         - ninja test
+
+clang-11:
+    image: silkeh/clang:11
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
+
+clang-12:
+    image: silkeh/clang:12
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
+
+clang-13:
+    image: silkeh/clang:13
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
+
+clang-14:
+    image: silkeh/clang:14
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
+
+clang-15:
+    image: silkeh/clang:15
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
+
+clang-16:
+    image: silkeh/clang:16
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
+
+clang-latest:
+    image: silkeh/clang:latest
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
