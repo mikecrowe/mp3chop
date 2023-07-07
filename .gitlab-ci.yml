@@ -31,6 +31,28 @@ debian-bullseye-clang:
         - ninja -v
         - ninja test
 
+debian-bookworm-gcc:
+    image: debian:bookworm-slim
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build build-essential ca-certificates
+    script:
+        - meson build --werror
+        - cd build
+        - ninja -v
+        - ninja test
+
+debian-bookworm-clang:
+    image: debian:bookworm-slim
+    before_script:
+        - apt-get update
+        - apt-get install -y meson ninja-build build-essential clang ca-certificates
+    script:
+        - CC=clang CXX=clang++ meson --werror build
+        - cd build
+        - ninja -v
+        - ninja test
+
 gcc-11:
     image: gcc:11
     before_script:
